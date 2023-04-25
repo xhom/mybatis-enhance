@@ -8,7 +8,6 @@ import com.vz.mybatis.enhance.common.mapper.qr.BaseExample;
 import com.vz.mybatis.enhance.common.mapper.qr.Criterion;
 import com.vz.mybatis.enhance.common.mapper.qr.Querier;
 import org.apache.ibatis.builder.annotation.ProviderContext;
-import org.apache.ibatis.jdbc.SQL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -26,6 +25,7 @@ public class BaseSqlProvider {
     private static final Logger logger = LoggerFactory.getLogger(BaseSqlProvider.class);
 
     public String selectByPrimaryKey(Map<String,Object> params, ProviderContext context){
+        params.remove("param1");
         TableINF table = MapperHelper.getTable(context);
         ColumnINF primaryKey = table.getPrimaryKey();
         String sql =  SqlHelper.sql()
@@ -66,6 +66,7 @@ public class BaseSqlProvider {
     }
 
     public String deleteByPrimaryKey(Map<String,Object> params, ProviderContext context){
+        params.remove("param1");
         TableINF table = MapperHelper.getTable(context);
         ColumnINF primaryKey = table.getPrimaryKey();
         String sql =  SqlHelper.sql()
@@ -90,7 +91,9 @@ public class BaseSqlProvider {
         return sql;
     }
 
-    public String insert(Object entity, ProviderContext context){
+    public String insert(Map<String,Object> params, ProviderContext context){
+        Object entity = params.get("record");
+        params.remove("record");
         TableINF table = MapperHelper.getTable(context);
         List<String> columns = new ArrayList<>(), values = new ArrayList<>();
         table.getColumns().forEach(item -> {
@@ -99,11 +102,12 @@ public class BaseSqlProvider {
                 return;
             }
             columns.add(item.getColumn());
+            String property = item.getProperty();
+            values.add("#{"+property+"}");
             try{
-                Object o = item.getField().get(entity);
-                values.add(getSqlValue(o));
+                params.put(property, item.getField().get(entity));
             }catch (Exception e){
-                values.add(getSqlValue(null));
+                params.put(property, null);
                 e.printStackTrace();
             }
         });
@@ -112,11 +116,13 @@ public class BaseSqlProvider {
                 .insert(table.getTableName())
                 .values(columns, values)
                 .toStr();
-        printLog(context, "insert", sql, entity);
+        printLog(context, "insert", sql, params);
         return sql;
     }
 
-    public String insertSelective(Object entity, ProviderContext context){
+    public String insertSelective(Map<String,Object> params, ProviderContext context){
+        Object entity = params.get("record");
+        params.remove("record");
         TableINF table = MapperHelper.getTable(context);
         List<String> columns = new ArrayList<>(), values = new ArrayList<>();
         table.getColumns().forEach(item -> {
@@ -125,11 +131,12 @@ public class BaseSqlProvider {
                 return;
             }
             try{
-                Object o = item.getField().get(entity);
-                if(Objects.nonNull(o)){
-                    //只写入非NUll的字段
+                Object value = item.getField().get(entity);
+                if(Objects.nonNull(value)){
                     columns.add(item.getColumn());
-                    values.add(getSqlValue(o));
+                    String property = item.getProperty();
+                    values.add("#{"+property+"}");
+                    params.put(property, value);
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -144,17 +151,21 @@ public class BaseSqlProvider {
         return sql;
     }
 
-    public String updateByPrimaryKey(Object entity, ProviderContext context){
+    public String updateByPrimaryKey(Map<String,Object> params, ProviderContext context){
+        Object entity = params.get("record");
+        params.remove("record");
         TableINF table = MapperHelper.getTable(context);
         Map<String,String> setValues = new HashMap<>();
         StringBuilder condition = new StringBuilder();
         table.getColumns().forEach(item -> {
             try{
-                Object o = item.getField().get(entity);
+                String column = item.getColumn(), property = item.getProperty();
+                Object value = item.getField().get(entity);
+                params.put(property, value);
                 if(item.getIsPrimaryKey()){
-                    condition.append(item.getColumn()).append("=").append(getSqlValue(o));
+                    condition.append(column).append("=").append("#{").append(property).append("}");
                 }else{
-                    setValues.put(item.getColumn(), getSqlValue(o));
+                    setValues.put(column, "#{"+property+"}");
                 }
             }catch (Exception e){
                 e.printStackTrace();

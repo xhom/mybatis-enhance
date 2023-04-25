@@ -27,13 +27,13 @@ public interface BaseMapper<T,K>{
     int deleteByExample(@Param("querier") Querier<T> querier);
 
     @InsertProvider(type = BaseSqlProvider.class, method = "insert")
-    int insert(T record);
+    int insert(@Param("record") T record);
 
     @InsertProvider(type = BaseSqlProvider.class, method = "insertSelective")
-    int insertSelective(T record);
+    int insertSelective(@Param("record") T record);
 
     @UpdateProvider(type = BaseSqlProvider.class, method = "updateByPrimaryKey")
-    int updateByPrimaryKey(T record);
+    int updateByPrimaryKey(@Param("record") T record);
 
     /*
 

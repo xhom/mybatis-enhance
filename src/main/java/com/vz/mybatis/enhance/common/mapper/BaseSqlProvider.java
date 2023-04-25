@@ -219,8 +219,7 @@ public class BaseSqlProvider {
                     Object secondValue = cri.getSecondValue();
                     params.put(property1, value);
                     params.put(property2, secondValue);
-                    condition
-                            .append(cri.getCondition())
+                    condition.append(cri.getCondition())
                             .append("#{").append(property1).append("}")
                             .append(" AND ")
                             .append("#{").append(property2).append("}");
@@ -232,42 +231,10 @@ public class BaseSqlProvider {
         return condition.toString();
     }
 
-    private static String getSqlValue(Object value){
-        if(Objects.isNull(value)){
-            return "NULL";
-        }
-        if(value instanceof Number){
-            return value.toString();
-        }else if(value instanceof Date){
-            Date date = (Date) value;
-            return "'"+dateFormat(date)+"'";
-        }else if(value instanceof Collection){
-            String inWhere = "";
-            Collection<?> collection = (Collection<?>)value;
-            if(!CollectionUtils.isEmpty(collection)){
-                StringBuilder inList = new StringBuilder();
-                for (Object item : collection) {
-                    if(item instanceof Number){
-                        inList.append(item).append(",");
-                    }else{
-                        inList.append("'").append(item).append("',");
-                    }
-                }
-                inWhere = inList.deleteCharAt(inList.length()-1).toString();
-            }
-            return inWhere;
-        }else{
-            return "'"+value+"'";
-        }
-    }
-
     private static void printLog(ProviderContext context, String method, String sql, Object params){
         String mapperClassName = context.getMapperType().getName();
         String separator = "-----------------------------------------------------------";
         logger.info("\n{}\nMethod: {}.{}\nSql: {} \nParams: {}\n{}", separator, mapperClassName, method, sql, params, separator);
     }
 
-    private static String dateFormat(Date date){
-        return format.format(date);
-    }
 }

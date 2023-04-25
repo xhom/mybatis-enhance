@@ -27,7 +27,7 @@ public class TestController {
 
     @GetMapping("/user/get/{id}")
     public TSupplierUser getUser(@PathVariable("id") Long id){
-        return userMapper.selectByPrimaryKey(id);
+        return userMapper.selectById(id);
     }
 
     @GetMapping("/user/list")
@@ -38,19 +38,19 @@ public class TestController {
                 .limit(3);
 
         Map<String,Object> map = new HashMap<>();
-        map.put("total", userMapper.countByExample(querier));
-        map.put("list", userMapper.selectByExample(querier));
+        map.put("total", userMapper.count(querier));
+        map.put("list", userMapper.select(querier));
         return map;
     }
 
     @GetMapping("/user/listAll")
     public List<TSupplierUser> listAll(){
-        return userMapper.selectByExample(Querier.query());
+        return userMapper.select(Querier.query());
     }
 
     @GetMapping("/user/del/{id}")
     public Integer deleteUser(@PathVariable("id") Long id){
-        int count = userMapper.deleteByPrimaryKey(id);
+        int count = userMapper.deleteById(id);
         System.out.println("delete rows ="+count);
         return count;
     }
@@ -60,7 +60,7 @@ public class TestController {
         Querier<TSupplierUser> querier = Querier.<TSupplierUser>query()
                 .orderByDesc(TSupplierUser::getId)
                 .limit(1);
-        List<TSupplierUser> supplierUserList = userMapper.selectByExample(querier);
+        List<TSupplierUser> supplierUserList = userMapper.select(querier);
         Long newId = supplierUserList.get(0).getId()+1;
 
         TSupplierUser user = new TSupplierUser();
@@ -73,7 +73,7 @@ public class TestController {
 
 
         System.out.println("new User: "+user);
-        return userMapper.selectByPrimaryKey(newId);
+        return userMapper.selectById(newId);
     }
 
 }

@@ -1,0 +1,19 @@
+server:
+  port: 8777
+  tomcat:
+    uri-encoding: UTF-8
+
+spring:
+  application:
+    name: mybatis-enhance
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://mysql.sqlpub.com:3306/xxdb_8999?useUnicode=yes&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false
+    username: wahaha
+    password: 9cf502ed7d655f36
+
+  mybatis:
+    config-location: classpath:mybatis/mybatis-config.xml
+    mapper-locations: classpath:mybatis/mapper/*.xml
+    type-aliases-package: com.vz.mybatis.enhance.entity

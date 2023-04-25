@@ -5,9 +5,7 @@ import com.vz.mybatis.enhance.common.mapper.hp.MethodRefHelper;
 import com.vz.mybatis.enhance.common.mapper.hp.NameHelper;
 import com.vz.mybatis.enhance.common.mapper.inf.ColumnINF;
 
-import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.Objects;
 
 /**
  * @author visy.wang
@@ -114,13 +112,6 @@ public class Querier<T> {
     }
 
     private ColumnINF getColumnInfo(FFunction<T,?> function){
-        System.out.println("==============================");
-        System.out.println(function.getClass().getName());
-        for (Type genericInterface : function.getClass().getGenericInterfaces()) {
-            System.out.println(genericInterface.getClass().getName());
-        }
-        System.out.println("==============================");
-
         String property = MethodRefHelper.getFieldName(function);
         ColumnINF column = new ColumnINF();
         column.setProperty(property);

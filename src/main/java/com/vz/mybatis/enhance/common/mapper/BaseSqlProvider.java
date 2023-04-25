@@ -39,6 +39,7 @@ public class BaseSqlProvider {
 
     public String selectByExample(Map<String,Object> params, ProviderContext context){
         Querier<?> querier = (Querier<?>)params.get("querier");
+        params.clear();
         TableINF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         String sql = SqlHelper.sql()
@@ -54,6 +55,7 @@ public class BaseSqlProvider {
 
     public String countByExample(Map<String,Object> params, ProviderContext context){
         Querier<?> querier = (Querier<?>)params.get("querier");
+        params.clear();
         TableINF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         String sql = SqlHelper.sql()
@@ -80,6 +82,7 @@ public class BaseSqlProvider {
 
     public String deleteByExample(Map<String,Object> params, ProviderContext context){
         Querier<?> querier = (Querier<?>)params.get("querier");
+        params.clear();
         TableINF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         String sql = SqlHelper.sql()
@@ -93,7 +96,7 @@ public class BaseSqlProvider {
 
     public String insert(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
-        params.remove("record");
+        params.clear();;
         TableINF table = MapperHelper.getTable(context);
         List<String> columns = new ArrayList<>(), values = new ArrayList<>();
         table.getColumns().forEach(item -> {
@@ -122,7 +125,7 @@ public class BaseSqlProvider {
 
     public String insertSelective(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
-        params.remove("record");
+        params.clear();
         TableINF table = MapperHelper.getTable(context);
         List<String> columns = new ArrayList<>(), values = new ArrayList<>();
         table.getColumns().forEach(item -> {
@@ -153,7 +156,7 @@ public class BaseSqlProvider {
 
     public String updateByPrimaryKey(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
-        params.remove("record");
+        params.clear();
         TableINF table = MapperHelper.getTable(context);
         Map<String,String> setValues = new HashMap<>();
         StringBuilder condition = new StringBuilder();
@@ -182,7 +185,6 @@ public class BaseSqlProvider {
     }
 
     private static String getCondition(BaseExample example, Map<String,Object> params){
-        params.clear();
         StringBuilder condition = new StringBuilder();
         example.getCriteriaList().forEach(criteria -> {
             for (Criterion cri : criteria.getAllCriteria()) {

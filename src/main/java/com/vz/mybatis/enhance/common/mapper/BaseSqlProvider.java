@@ -192,6 +192,88 @@ public class BaseSqlProvider {
         return sql;
     }
 
+    public String updateByIdSelective(Map<String,Object> params, ProviderContext context){
+        Object entity = params.get("record");
+        params.clear();
+        TableINF table = MapperHelper.getTable(context);
+        Map<String,String> setValues = new HashMap<>();
+        StringBuilder condition = new StringBuilder();
+        table.getColumns().forEach(item -> {
+            try{
+                String column = item.getColumn(), property = item.getProperty();
+                Object value = item.getField().get(entity);
+                if(item.getIsPrimaryKey()){
+                    params.put(property, value);
+                    condition.append(column).append("=").append("#{").append(property).append("}");
+                }else if(Objects.nonNull(value)){
+                    params.put(property, value);
+                    setValues.put(column, "#{"+property+"}");
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+
+        String sql = SqlHelper.sql().update(table.getTableName()).set(setValues).where(condition.toString()).toStr();
+        printLog(context, "updateByIdSelective", sql, entity);
+        return sql;
+    }
+
+    public String update(Map<String,Object> params, ProviderContext context){
+        Object entity = params.get("record");
+        Querier<?> querier = (Querier<?>)params.get("querier");
+        BaseExample example = querier.getExample();
+        params.clear();
+        TableINF table = MapperHelper.getTable(context);
+        Map<String,String> setValues = new HashMap<>();
+        table.getColumns().forEach(item -> {
+            if(item.getIsPrimaryKey()){
+                //主键不能修改
+                return;
+            }
+            try{
+                String property = item.getProperty()+"Alias"; //避免和条件中的属性名冲突
+                params.put(property, item.getField().get(entity));
+                setValues.put(item.getColumn(), "#{"+property+"}");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+
+        String sql = SqlHelper.sql().update(table.getTableName()).set(setValues).where(getCondition(example, params)).toStr();
+        printLog(context, "update", sql, entity);
+        return sql;
+    }
+
+    public String updateSelective(Map<String,Object> params, ProviderContext context){
+        Object entity = params.get("record");
+        Querier<?> querier = (Querier<?>)params.get("querier");
+        BaseExample example = querier.getExample();
+        params.clear();
+        TableINF table = MapperHelper.getTable(context);
+        Map<String,String> setValues = new HashMap<>();
+        table.getColumns().forEach(item -> {
+            if(item.getIsPrimaryKey()){
+                //主键不能修改
+                return;
+            }
+            try{
+                Object value = item.getField().get(entity);
+                if(Objects.nonNull(value)){
+                    String property = item.getProperty()+"Alias"; //避免和条件中的属性名冲突
+                    params.put(property, value);
+                    setValues.put(item.getColumn(), "#{"+property+"}");
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+
+        String sql = SqlHelper.sql().update(table.getTableName()).set(setValues).where(getCondition(example, params)).toStr();
+        printLog(context, "update", sql, entity);
+        return sql;
+    }
+
     private static String getCondition(BaseExample example, Map<String,Object> params){
         StringBuilder condition = new StringBuilder();
         example.getCriteriaList().forEach(criteria -> {

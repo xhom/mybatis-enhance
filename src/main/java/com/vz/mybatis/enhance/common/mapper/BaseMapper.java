@@ -38,24 +38,12 @@ public interface BaseMapper<T,K>{
     @UpdateProvider(type = BaseSqlProvider.class, method = "updateById")
     int updateById(@Param("record") T record);
 
-    /*
+    @UpdateProvider(type = BaseSqlProvider.class, method = "updateByIdSelective")
+    int updateByIdSelective(@Param("record") T record);
 
+    @UpdateProvider(type = BaseSqlProvider.class, method = "update")
+    int update(@Param("record") T record, @Param("querier") Querier<T> querier);
 
-
-
-
-
-
-
-
-
-    int updateByExample(@Param("record") T record,
-                        @Param("example") BaseExample example);
-
-    int updateByExampleSelective(@Param("record") T record,
-                                 @Param("example") BaseExample example);
-
-
-
-    int updateByPrimaryKeySelective(T record);*/
+    @UpdateProvider(type = BaseSqlProvider.class, method = "updateSelective")
+    int updateSelective(@Param("record") T record, @Param("querier") Querier<T> querier);
 }

@@ -111,26 +111,18 @@ public class Querier<T> {
         return this;
     }
 
-    private ColumnINF getColumnInfo(FFunction<T,?> function){
-        String property = MethodRefHelper.getFieldName(function);
-        ColumnINF column = new ColumnINF();
-        column.setProperty(property);
-        column.setColumn(NameHelper.camel2underline(property));
-        return column;
-    }
-
     public Querier<T> distinct(){
         example.setDistinct(true);
         return this;
     }
 
-    public Querier<T> asc(FFunction<T,?> function){
+    public Querier<T> orderByAsc(FFunction<T,?> function){
         ColumnINF columnInfo = getColumnInfo(function);
         example.addOrderBy(columnInfo.getColumn(), true);
         return this;
     }
 
-    public Querier<T> desc(FFunction<T,?> function){
+    public Querier<T> orderByDesc(FFunction<T,?> function){
         ColumnINF columnInfo = getColumnInfo(function);
         example.addOrderBy(columnInfo.getColumn(), false);
         return this;
@@ -155,5 +147,13 @@ public class Querier<T> {
 
     public BaseExample getExample(){
         return example;
+    }
+
+    private ColumnINF getColumnInfo(FFunction<T,?> function){
+        String property = MethodRefHelper.getFieldName(function);
+        ColumnINF column = new ColumnINF();
+        column.setProperty(property);
+        column.setColumn(NameHelper.camel2underline(property));
+        return column;
     }
 }

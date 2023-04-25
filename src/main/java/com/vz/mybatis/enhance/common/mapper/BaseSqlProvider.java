@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -21,7 +20,6 @@ import java.util.*;
  * @date 2023/4/24 13:18
  */
 public class BaseSqlProvider {
-    private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final Logger logger = LoggerFactory.getLogger(BaseSqlProvider.class);
 
     public String selectByPrimaryKey(Map<String,Object> params, ProviderContext context){
@@ -96,7 +94,7 @@ public class BaseSqlProvider {
 
     public String insert(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
-        params.clear();;
+        params.clear();
         TableINF table = MapperHelper.getTable(context);
         List<String> columns = new ArrayList<>(), values = new ArrayList<>();
         table.getColumns().forEach(item -> {

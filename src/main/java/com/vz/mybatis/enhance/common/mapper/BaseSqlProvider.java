@@ -31,7 +31,7 @@ public class BaseSqlProvider {
                 .from(table.getTableName())
                 .where(primaryKey.getColumn() + " = #{id}")
                 .toStr();
-        printLog(context, "selectByPrimaryKey", sql, params);
+        printLog(context, "selectById", sql, params);
         return sql;
     }
 
@@ -47,7 +47,17 @@ public class BaseSqlProvider {
                 .orderBy(example.getOrderByClause())
                 .limit(example.getLimitClause())
                 .toStr();
-        printLog(context, "selectByExample", sql, params);
+        printLog(context, "select", sql, params);
+        return sql;
+    }
+
+    public String selectAll(ProviderContext context){
+        TableINF table = MapperHelper.getTable(context);
+        String sql = SqlHelper.sql()
+                .select(table.selectColumnsAsProperties())
+                .from(table.getTableName())
+                .toStr();
+        printLog(context, "selectAll", sql, Collections.emptyMap());
         return sql;
     }
 
@@ -61,7 +71,7 @@ public class BaseSqlProvider {
                 .from(table.getTableName())
                 .where(getCondition(example, params))
                 .toStr();
-        printLog(context, "countByExample", sql, params);
+        printLog(context, "count", sql, params);
         return sql;
     }
 
@@ -74,7 +84,7 @@ public class BaseSqlProvider {
                 .from(table.getTableName())
                 .where(primaryKey.getColumn() + " = #{id}")
                 .toStr();
-        printLog(context, "deleteByPrimaryKey", sql, params);
+        printLog(context, "deleteById", sql, params);
         return sql;
     }
 
@@ -88,7 +98,7 @@ public class BaseSqlProvider {
                 .from(table.getTableName())
                 .where(getCondition(example, params))
                 .toStr();
-        printLog(context, "deleteByExample", sql, params);
+        printLog(context, "delete", sql, params);
         return sql;
     }
 
@@ -178,7 +188,7 @@ public class BaseSqlProvider {
                 .set(setValues)
                 .where(condition.toString())
                 .toStr();
-        printLog(context, "updateByPrimaryKey", sql, entity);
+        printLog(context, "updateById", sql, entity);
         return sql;
     }
 

@@ -17,6 +17,9 @@ public interface BaseMapper<T,K>{
     @SelectProvider(type = BaseSqlProvider.class, method = "select")
     List<T> select(@Param("querier") Querier<T> querier);
 
+    @SelectProvider(type = BaseSqlProvider.class, method = "selectAll")
+    List<T> selectAll();
+
     @SelectProvider(type = BaseSqlProvider.class, method = "count")
     long count(@Param("querier") Querier<T> querier);
 

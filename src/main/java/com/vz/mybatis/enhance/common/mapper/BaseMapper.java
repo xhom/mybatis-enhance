@@ -11,20 +11,20 @@ import java.util.List;
  * @date 2023/4/24 12:59
  */
 public interface BaseMapper<T,K>{
-    @SelectProvider(type = BaseSqlProvider.class, method = "selectByPrimaryKey")
-    T selectByPrimaryKey(@Param("id") K id);
+    @SelectProvider(type = BaseSqlProvider.class, method = "selectById")
+    T selectById(@Param("id") K id);
 
-    @SelectProvider(type = BaseSqlProvider.class, method = "selectByExample")
-    List<T> selectByExample(@Param("querier") Querier<T> querier);
+    @SelectProvider(type = BaseSqlProvider.class, method = "select")
+    List<T> select(@Param("querier") Querier<T> querier);
 
-    @SelectProvider(type = BaseSqlProvider.class, method = "countByExample")
-    long countByExample(@Param("querier") Querier<T> querier);
+    @SelectProvider(type = BaseSqlProvider.class, method = "count")
+    long count(@Param("querier") Querier<T> querier);
 
-    @DeleteProvider(type = BaseSqlProvider.class, method = "deleteByPrimaryKey")
-    int deleteByPrimaryKey(@Param("id") K id);
+    @DeleteProvider(type = BaseSqlProvider.class, method = "deleteById")
+    int deleteById(@Param("id") K id);
 
-    @DeleteProvider(type = BaseSqlProvider.class, method = "deleteByExample")
-    int deleteByExample(@Param("querier") Querier<T> querier);
+    @DeleteProvider(type = BaseSqlProvider.class, method = "delete")
+    int delete(@Param("querier") Querier<T> querier);
 
     @InsertProvider(type = BaseSqlProvider.class, method = "insert")
     int insert(@Param("record") T record);
@@ -32,8 +32,8 @@ public interface BaseMapper<T,K>{
     @InsertProvider(type = BaseSqlProvider.class, method = "insertSelective")
     int insertSelective(@Param("record") T record);
 
-    @UpdateProvider(type = BaseSqlProvider.class, method = "updateByPrimaryKey")
-    int updateByPrimaryKey(@Param("record") T record);
+    @UpdateProvider(type = BaseSqlProvider.class, method = "updateById")
+    int updateById(@Param("record") T record);
 
     /*
 

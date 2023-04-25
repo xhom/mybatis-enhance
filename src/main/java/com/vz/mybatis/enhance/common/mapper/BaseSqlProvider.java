@@ -22,7 +22,7 @@ import java.util.*;
 public class BaseSqlProvider {
     private static final Logger logger = LoggerFactory.getLogger(BaseSqlProvider.class);
 
-    public String selectByPrimaryKey(Map<String,Object> params, ProviderContext context){
+    public String selectById(Map<String,Object> params, ProviderContext context){
         params.remove("param1");
         TableINF table = MapperHelper.getTable(context);
         ColumnINF primaryKey = table.getPrimaryKey();
@@ -35,7 +35,7 @@ public class BaseSqlProvider {
         return sql;
     }
 
-    public String selectByExample(Map<String,Object> params, ProviderContext context){
+    public String select(Map<String,Object> params, ProviderContext context){
         Querier<?> querier = (Querier<?>)params.get("querier");
         params.clear();
         TableINF table = MapperHelper.getTable(context);
@@ -51,7 +51,7 @@ public class BaseSqlProvider {
         return sql;
     }
 
-    public String countByExample(Map<String,Object> params, ProviderContext context){
+    public String count(Map<String,Object> params, ProviderContext context){
         Querier<?> querier = (Querier<?>)params.get("querier");
         params.clear();
         TableINF table = MapperHelper.getTable(context);
@@ -65,7 +65,7 @@ public class BaseSqlProvider {
         return sql;
     }
 
-    public String deleteByPrimaryKey(Map<String,Object> params, ProviderContext context){
+    public String deleteById(Map<String,Object> params, ProviderContext context){
         params.remove("param1");
         TableINF table = MapperHelper.getTable(context);
         ColumnINF primaryKey = table.getPrimaryKey();
@@ -78,7 +78,7 @@ public class BaseSqlProvider {
         return sql;
     }
 
-    public String deleteByExample(Map<String,Object> params, ProviderContext context){
+    public String delete(Map<String,Object> params, ProviderContext context){
         Querier<?> querier = (Querier<?>)params.get("querier");
         params.clear();
         TableINF table = MapperHelper.getTable(context);
@@ -152,7 +152,7 @@ public class BaseSqlProvider {
         return sql;
     }
 
-    public String updateByPrimaryKey(Map<String,Object> params, ProviderContext context){
+    public String updateById(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
         params.clear();
         TableINF table = MapperHelper.getTable(context);

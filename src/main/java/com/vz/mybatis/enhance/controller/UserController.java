@@ -19,18 +19,18 @@ import java.util.Map;
  * @description:
  * @date 2023/4/24 18:09
  */
-@RequestMapping("/test")
+@RequestMapping("/user")
 @RestController
-public class TestController {
+public class UserController {
     @Resource
     private UserMapper userMapper;
 
-    @GetMapping("/user/get/{id}")
+    @GetMapping("/get/{id}")
     public TSupplierUser getUser(@PathVariable("id") Long id){
         return userMapper.selectById(id);
     }
 
-    @GetMapping("/user/list")
+    @GetMapping("/list")
     public Map<String,Object> userList(){
         Querier<TSupplierUser> querier = Querier.<TSupplierUser>query()
                 .gt(TSupplierUser::getId, 4)
@@ -43,19 +43,19 @@ public class TestController {
         return map;
     }
 
-    @GetMapping("/user/listAll")
+    @GetMapping("/listAll")
     public List<TSupplierUser> listAll(){
         return userMapper.select(Querier.query());
     }
 
-    @GetMapping("/user/del/{id}")
+    @GetMapping("/del/{id}")
     public Integer deleteUser(@PathVariable("id") Long id){
         int count = userMapper.deleteById(id);
         System.out.println("delete rows ="+count);
         return count;
     }
 
-    @GetMapping("/user/add")
+    @GetMapping("/add")
     public TSupplierUser addUser(){
         Querier<TSupplierUser> querier = Querier.<TSupplierUser>query()
                 .orderByDesc(TSupplierUser::getId)

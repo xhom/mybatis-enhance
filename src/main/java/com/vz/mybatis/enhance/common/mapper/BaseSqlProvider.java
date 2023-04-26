@@ -260,7 +260,11 @@ public class BaseSqlProvider {
             }
         });
 
-        String sql = SqlHelper.sql().update(table.getTableName()).set(setValues).where(condition.toString()).toStr();
+        String sql = SqlHelper.sql()
+                .update(table.getTableName())
+                .set(setValues)
+                .where(condition.toString())
+                .toStr();
         printLog(context, "updateByIdSelective", sql, params);
         return sql;
     }
@@ -286,7 +290,11 @@ public class BaseSqlProvider {
             }
         });
 
-        String sql = SqlHelper.sql().update(table.getTableName()).set(setValues).where(getCondition(example, params)).toStr();
+        String sql = SqlHelper.sql()
+                .update(table.getTableName())
+                .set(setValues)
+                .where(getCondition(example, params))
+                .toStr();
         printLog(context, "update", sql, params);
         return sql;
     }
@@ -315,7 +323,11 @@ public class BaseSqlProvider {
             }
         });
 
-        String sql = SqlHelper.sql().update(table.getTableName()).set(setValues).where(getCondition(example, params)).toStr();
+        String sql = SqlHelper.sql()
+                .update(table.getTableName())
+                .set(setValues)
+                .where(getCondition(example, params))
+                .toStr();
         printLog(context, "update", sql, params);
         return sql;
     }

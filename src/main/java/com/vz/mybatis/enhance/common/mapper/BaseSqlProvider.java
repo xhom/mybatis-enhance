@@ -31,7 +31,7 @@ public class BaseSqlProvider {
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " = #{id}")
                 .toStr();
-        printLog(context, "selectById", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -45,7 +45,7 @@ public class BaseSqlProvider {
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " IN (" + getInWhere("idList", idList) + ")")
                 .toStr();
-        printLog(context, "selectByIds", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -61,7 +61,7 @@ public class BaseSqlProvider {
                 .orderBy(example.getOrderByClause())
                 .limit(example.getLimitClause())
                 .toStr();
-        printLog(context, "select", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -71,7 +71,7 @@ public class BaseSqlProvider {
                 .select(table.selectColumnsAsProperties())
                 .from(table.getTableName())
                 .toStr();
-        printLog(context, "selectAll", sql, Collections.emptyMap());
+        printLog(context, sql, Collections.emptyMap());
         return sql;
     }
 
@@ -85,7 +85,7 @@ public class BaseSqlProvider {
                 .from(table.getTableName())
                 .where(getCondition(example, params))
                 .toStr();
-        printLog(context, "count", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -95,7 +95,7 @@ public class BaseSqlProvider {
                 .count(table.getPkColumn().getColumn())
                 .from(table.getTableName())
                 .toStr();
-        printLog(context, "countAll", sql, Collections.emptyMap());
+        printLog(context, sql, Collections.emptyMap());
         return sql;
     }
 
@@ -108,7 +108,7 @@ public class BaseSqlProvider {
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " = #{id}")
                 .toStr();
-        printLog(context, "deleteById", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -122,7 +122,7 @@ public class BaseSqlProvider {
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " IN (" + getInWhere("idList", idList) + ")")
                 .toStr();
-        printLog(context, "deleteByIds", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -136,7 +136,7 @@ public class BaseSqlProvider {
                 .from(table.getTableName())
                 .where(getCondition(example, params))
                 .toStr();
-        printLog(context, "delete", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -165,7 +165,7 @@ public class BaseSqlProvider {
                 .insert(table.getTableName())
                 .values(columns, values)
                 .toStr();
-        printLog(context, "insert", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -196,7 +196,7 @@ public class BaseSqlProvider {
                 .insert(table.getTableName())
                 .values(columns, values)
                 .toStr();
-        printLog(context, "insertSelective", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -230,7 +230,7 @@ public class BaseSqlProvider {
                 .set(setValues)
                 .where(condition.toString())
                 .toStr();
-        printLog(context, "updateById", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -265,7 +265,7 @@ public class BaseSqlProvider {
                 .set(setValues)
                 .where(condition.toString())
                 .toStr();
-        printLog(context, "updateByIdSelective", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -295,7 +295,7 @@ public class BaseSqlProvider {
                 .set(setValues)
                 .where(getCondition(example, params))
                 .toStr();
-        printLog(context, "update", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -328,7 +328,7 @@ public class BaseSqlProvider {
                 .set(setValues)
                 .where(getCondition(example, params))
                 .toStr();
-        printLog(context, "update", sql, params);
+        printLog(context, sql, params);
         return sql;
     }
 
@@ -384,10 +384,10 @@ public class BaseSqlProvider {
         return inWhere;
     }
 
-    private static void printLog(ProviderContext context, String method, String sql, Object params){
-        String mapperClassName = context.getMapperType().getName();
+    private static void printLog(ProviderContext context, String sql, Object params){
+        String mapperMethodName = context.getMapperType().getName()+"."+context.getMapperMethod().getName();
         String separator = "-----------------------------------------------------------";
-        logger.info("\n{}\nMethod: {}.{}\nSql: {} \nParams: {}\n{}", separator, mapperClassName, method, sql, params, separator);
+        logger.info("\n{}\nMethod: {}\nSql: {} \nParams: {}\n{}", separator, mapperMethodName, sql, params, separator);
     }
 
 }

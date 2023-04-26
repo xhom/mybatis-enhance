@@ -143,7 +143,7 @@ public class Querier<T> {
 
     public Querier<T> clear(){
         example.clear();
-        this.criteria = example.createCriteria();
+        criteria = example.createCriteria();
         return this;
     }
 

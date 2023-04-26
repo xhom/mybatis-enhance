@@ -384,7 +384,7 @@ public class BaseSqlProvider {
 
     private static void printLog(ProviderContext context, String sql, Object params){
         String mapperMethodName = context.getMapperType().getName()+"."+context.getMapperMethod().getName();
-        String separator = "-----------------------------------------------------------";
+        String separator = "------------------------------------------------------------------------------";
         logger.info("\n{}\nMethod: {}\nSql: {} \nParams: {}\n{}", separator, mapperMethodName, sql, params, separator);
     }
 

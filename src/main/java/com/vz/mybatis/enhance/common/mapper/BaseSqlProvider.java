@@ -212,6 +212,10 @@ public class BaseSqlProvider {
                 Object value = item.getField().get(entity);
                 params.put(property, value);
                 if(item.getIsPK()){
+                    if(Objects.isNull(value)){
+                        //主键值不能为空
+                        throw new IllegalArgumentException(property+" Can not be null !");
+                    }
                     condition.append(column).append("=").append("#{").append(property).append("}");
                 }else{
                     setValues.put(column, "#{"+property+"}");
@@ -241,6 +245,10 @@ public class BaseSqlProvider {
                 String column = item.getColumn(), property = item.getProperty();
                 Object value = item.getField().get(entity);
                 if(item.getIsPK()){
+                    if(Objects.isNull(value)){
+                        //主键值不能为空
+                        throw new IllegalArgumentException(property+" Can not be null !");
+                    }
                     params.put(property, value);
                     condition.append(column).append("=").append("#{").append(property).append("}");
                 }else if(Objects.nonNull(value)){

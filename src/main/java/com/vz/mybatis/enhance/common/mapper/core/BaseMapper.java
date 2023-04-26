@@ -1,4 +1,4 @@
-package com.vz.mybatis.enhance.common.mapper;
+package com.vz.mybatis.enhance.common.mapper.core;
 
 import com.vz.mybatis.enhance.common.mapper.qr.Querier;
 import org.apache.ibatis.annotations.*;

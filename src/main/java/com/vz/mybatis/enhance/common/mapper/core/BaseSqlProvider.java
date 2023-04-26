@@ -1,4 +1,4 @@
-package com.vz.mybatis.enhance.common.mapper;
+package com.vz.mybatis.enhance.common.mapper.core;
 
 import com.vz.mybatis.enhance.common.mapper.hp.MapperHelper;
 import com.vz.mybatis.enhance.common.mapper.hp.SqlHelper;

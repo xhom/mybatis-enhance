@@ -3,7 +3,9 @@ package com.vz.mybatis.enhance.common.mapper.qr;
 import com.vz.mybatis.enhance.common.func.FFunction;
 import com.vz.mybatis.enhance.common.mapper.hp.MethodRefHelper;
 import com.vz.mybatis.enhance.common.mapper.hp.NameHelper;
-import com.vz.mybatis.enhance.common.mapper.inf.ColumnINF;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 import java.util.Collection;
 
@@ -21,93 +23,92 @@ public class Querier<T> {
     }
 
     public Querier<T> isNull(FFunction<T,?> function) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.isNull(columnInfo.getColumn());
+        Column column = getColumn(function);
+        criteria.isNull(column.getColumn());
         return this;
     }
 
     public Querier<T> isNotNull(FFunction<T,?> function) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.isNotNull(columnInfo.getColumn());
+        Column column = getColumn(function);
+        criteria.isNotNull(column.getColumn());
         return this;
     }
 
     public <V> Querier<T> eq(FFunction<T,V> function, V value) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        System.out.println(columnInfo);
-        criteria.eq(columnInfo.getColumn(), value, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.eq(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> neq(FFunction<T,V> function, V value) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.neq(columnInfo.getColumn(), value, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.neq(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> gt(FFunction<T,V> function, V value) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.gt(columnInfo.getColumn(), value, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.gt(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> gte(FFunction<T,V> function, V value) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.gte(columnInfo.getColumn(), value, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.gte(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> lt(FFunction<T,V> function, V value) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.lt(columnInfo.getColumn(), value, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.lt(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> lte(FFunction<T,V> function, V value) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.lte(columnInfo.getColumn(), value, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.lte(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> like(FFunction<T,V> function, V value) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.like(columnInfo.getColumn(), value, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.like(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> likeLeft(FFunction<T,V> function, V value) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.likeLeft(columnInfo.getColumn(), value, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.likeLeft(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> likeRight(FFunction<T,V> function, V value) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.likeRight(columnInfo.getColumn(), value, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.likeRight(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> in(FFunction<T,V> function, Collection<V> values) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.in(columnInfo.getColumn(), values, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.in(column.getColumn(), values, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> notIn(FFunction<T,V> function, Collection<V> values) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.notIn(columnInfo.getColumn(), values, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.notIn(column.getColumn(), values, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> between(FFunction<T,V> function, V value1, V value2) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.between(columnInfo.getColumn(), value1, value2, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.between(column.getColumn(), value1, value2, column.getProperty());
         return this;
     }
 
     public <V> Querier<T> notBetween(FFunction<T,V> function, V value1, V value2) {
-        ColumnINF columnInfo = getColumnInfo(function);
-        criteria.notBetween(columnInfo.getColumn(), value1, value2, columnInfo.getProperty());
+        Column column = getColumn(function);
+        criteria.notBetween(column.getColumn(), value1, value2, column.getProperty());
         return this;
     }
 
@@ -117,14 +118,14 @@ public class Querier<T> {
     }
 
     public Querier<T> asc(FFunction<T,?> function){
-        ColumnINF columnInfo = getColumnInfo(function);
-        example.addOrderBy(columnInfo.getColumn(), true);
+        Column column = getColumn(function);
+        example.addOrderBy(column.getColumn(), true);
         return this;
     }
 
     public Querier<T> desc(FFunction<T,?> function){
-        ColumnINF columnInfo = getColumnInfo(function);
-        example.addOrderBy(columnInfo.getColumn(), false);
+        Column column = getColumn(function);
+        example.addOrderBy(column.getColumn(), false);
         return this;
     }
 
@@ -150,11 +151,19 @@ public class Querier<T> {
         return example;
     }
 
-    private ColumnINF getColumnInfo(FFunction<T,?> function){
+    private Column getColumn(FFunction<T,?> function){
         String property = MethodRefHelper.getFieldName(function);
-        ColumnINF column = new ColumnINF();
-        column.setProperty(property);
-        column.setColumn(NameHelper.camel2underline(property));
-        return column;
+        return Column.me(NameHelper.camel2underline(property), property);
+    }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static class Column {
+        private String column;
+        private String property;
+        public static Column me(String c, String p){
+            return new Column(c, p);
+        }
     }
 }

@@ -20,22 +20,22 @@ public class GeneratedCriteria {
         return criteria;
     }
 
-    protected void addCriterion(String column, String express) {
-        criteria.add(new Criterion(column, express));
+    protected void addCriterion(String column, String exp) {
+        criteria.add(new Criterion(column, exp));
     }
 
-    protected void addCriterion(String column, String express, Object value, String property) {
+    protected void addCriterion(String column, String exp, Object value, String property) {
         if (value == null) {
             throw new RuntimeException("Value for " + property + " cannot be null");
         }
-        criteria.add(new Criterion(column, express, value, property));
+        criteria.add(new Criterion(column, exp, value, property));
     }
 
-    protected void addCriterion(String column, String express, Object value1, Object value2, String property) {
+    protected void addCriterion(String column, String exp, Object value1, Object value2, String property) {
         if (value1 == null || value2 == null) {
             throw new RuntimeException("Between values for " + property + " cannot be null");
         }
-        criteria.add(new Criterion(column, express, value1, value2, property));
+        criteria.add(new Criterion(column, exp, value1, value2, property));
     }
 
     public Criteria isNull(String column) {

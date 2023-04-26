@@ -4,13 +4,23 @@ import java.util.*;
 
 /**
  * @author visy.wang
- * @description:
+ * @description: 基础查询构建类
  * @date 2023/4/24 13:01
  */
 public class BaseExample {
+    /**
+     * 是否在SELECT时去重，默认false
+     */
     protected boolean distinct;
+    /**
+     * 分页子句（不含LIMIT关键字）
+     */
     protected String limitClause;
+    /**
+     * 排序字段集合 Map<字段名，排序方向ASC或DESC>
+     */
     protected Map<String,String> orderByMap = new LinkedHashMap<>();
+
     protected List<Criteria> criteriaList;
 
     public BaseExample() {

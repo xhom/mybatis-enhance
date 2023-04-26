@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
  * @date 2023/4/24 14:57
  */
 @Data
-public class ColumnINF {
+public class COLUMN_INF {
     /**
      * 列类型
      */
@@ -18,7 +18,7 @@ public class ColumnINF {
     /**
      * 是否主键
      */
-    private Boolean isPrimaryKey = false;
+    private Boolean isPK = false;
     /**
      * 列名
      */

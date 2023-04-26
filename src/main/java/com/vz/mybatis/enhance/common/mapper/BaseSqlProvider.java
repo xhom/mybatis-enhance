@@ -2,8 +2,8 @@ package com.vz.mybatis.enhance.common.mapper;
 
 import com.vz.mybatis.enhance.common.mapper.hp.MapperHelper;
 import com.vz.mybatis.enhance.common.mapper.hp.SqlHelper;
-import com.vz.mybatis.enhance.common.mapper.inf.ColumnINF;
-import com.vz.mybatis.enhance.common.mapper.inf.TableINF;
+import com.vz.mybatis.enhance.common.mapper.inf.COLUMN_INF;
+import com.vz.mybatis.enhance.common.mapper.inf.TABLE_INF;
 import com.vz.mybatis.enhance.common.mapper.qr.BaseExample;
 import com.vz.mybatis.enhance.common.mapper.qr.Criterion;
 import com.vz.mybatis.enhance.common.mapper.qr.Querier;
@@ -24,12 +24,12 @@ public class BaseSqlProvider {
 
     public String selectById(Map<String,Object> params, ProviderContext context){
         params.remove("param1");
-        TableINF table = MapperHelper.getTable(context);
-        ColumnINF primaryKey = table.getPrimaryKey();
+        TABLE_INF table = MapperHelper.getTable(context);
+        COLUMN_INF pkColumn = table.getPkColumn();
         String sql =  SqlHelper.sql()
                 .select(table.selectColumnsAsProperties())
                 .from(table.getTableName())
-                .where(primaryKey.getColumn() + " = #{id}")
+                .where(pkColumn.getColumn() + " = #{id}")
                 .toStr();
         printLog(context, "selectById", sql, params);
         return sql;
@@ -38,7 +38,7 @@ public class BaseSqlProvider {
     public String selectList(Map<String,Object> params, ProviderContext context){
         Querier<?> querier = (Querier<?>)params.get("querier");
         params.clear();
-        TableINF table = MapperHelper.getTable(context);
+        TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         String sql = SqlHelper.sql()
                 .select(table.selectColumnsAsProperties(), example.getDistinct())
@@ -52,7 +52,7 @@ public class BaseSqlProvider {
     }
 
     public String selectAll(ProviderContext context){
-        TableINF table = MapperHelper.getTable(context);
+        TABLE_INF table = MapperHelper.getTable(context);
         String sql = SqlHelper.sql()
                 .select(table.selectColumnsAsProperties())
                 .from(table.getTableName())
@@ -64,10 +64,10 @@ public class BaseSqlProvider {
     public String count(Map<String,Object> params, ProviderContext context){
         Querier<?> querier = (Querier<?>)params.get("querier");
         params.clear();
-        TableINF table = MapperHelper.getTable(context);
+        TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         String sql = SqlHelper.sql()
-                .count(table.getPrimaryKey().getColumn(), example.getDistinct())
+                .count(table.getPkColumn().getColumn(), example.getDistinct())
                 .from(table.getTableName())
                 .where(getCondition(example, params))
                 .toStr();
@@ -76,9 +76,9 @@ public class BaseSqlProvider {
     }
 
     public String countAll(ProviderContext context){
-        TableINF table = MapperHelper.getTable(context);
+        TABLE_INF table = MapperHelper.getTable(context);
         String sql = SqlHelper.sql()
-                .count(table.getPrimaryKey().getColumn())
+                .count(table.getPkColumn().getColumn())
                 .from(table.getTableName())
                 .toStr();
         printLog(context, "countAll", sql, Collections.emptyMap());
@@ -87,12 +87,12 @@ public class BaseSqlProvider {
 
     public String deleteById(Map<String,Object> params, ProviderContext context){
         params.remove("param1");
-        TableINF table = MapperHelper.getTable(context);
-        ColumnINF primaryKey = table.getPrimaryKey();
+        TABLE_INF table = MapperHelper.getTable(context);
+        COLUMN_INF pkColumn = table.getPkColumn();
         String sql =  SqlHelper.sql()
                 .delete()
                 .from(table.getTableName())
-                .where(primaryKey.getColumn() + " = #{id}")
+                .where(pkColumn.getColumn() + " = #{id}")
                 .toStr();
         printLog(context, "deleteById", sql, params);
         return sql;
@@ -101,7 +101,7 @@ public class BaseSqlProvider {
     public String delete(Map<String,Object> params, ProviderContext context){
         Querier<?> querier = (Querier<?>)params.get("querier");
         params.clear();
-        TableINF table = MapperHelper.getTable(context);
+        TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         String sql = SqlHelper.sql()
                 .delete()
@@ -115,10 +115,10 @@ public class BaseSqlProvider {
     public String insert(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
         params.clear();
-        TableINF table = MapperHelper.getTable(context);
+        TABLE_INF table = MapperHelper.getTable(context);
         List<String> columns = new ArrayList<>(), values = new ArrayList<>();
         table.getColumns().forEach(item -> {
-            if(item.getIsPrimaryKey()){
+            if(item.getIsPK()){
                 //跳过主键，主键由数据库自增自动产生
                 return;
             }
@@ -144,10 +144,10 @@ public class BaseSqlProvider {
     public String insertSelective(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
         params.clear();
-        TableINF table = MapperHelper.getTable(context);
+        TABLE_INF table = MapperHelper.getTable(context);
         List<String> columns = new ArrayList<>(), values = new ArrayList<>();
         table.getColumns().forEach(item -> {
-            if(item.getIsPrimaryKey()){
+            if(item.getIsPK()){
                 //跳过主键，主键由数据库自增自动产生
                 return;
             }
@@ -175,7 +175,7 @@ public class BaseSqlProvider {
     public String updateById(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
         params.clear();
-        TableINF table = MapperHelper.getTable(context);
+        TABLE_INF table = MapperHelper.getTable(context);
         Map<String,String> setValues = new HashMap<>();
         StringBuilder condition = new StringBuilder();
         table.getColumns().forEach(item -> {
@@ -183,7 +183,7 @@ public class BaseSqlProvider {
                 String column = item.getColumn(), property = item.getProperty();
                 Object value = item.getField().get(entity);
                 params.put(property, value);
-                if(item.getIsPrimaryKey()){
+                if(item.getIsPK()){
                     condition.append(column).append("=").append("#{").append(property).append("}");
                 }else{
                     setValues.put(column, "#{"+property+"}");
@@ -205,14 +205,14 @@ public class BaseSqlProvider {
     public String updateByIdSelective(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
         params.clear();
-        TableINF table = MapperHelper.getTable(context);
+        TABLE_INF table = MapperHelper.getTable(context);
         Map<String,String> setValues = new HashMap<>();
         StringBuilder condition = new StringBuilder();
         table.getColumns().forEach(item -> {
             try{
                 String column = item.getColumn(), property = item.getProperty();
                 Object value = item.getField().get(entity);
-                if(item.getIsPrimaryKey()){
+                if(item.getIsPK()){
                     params.put(property, value);
                     condition.append(column).append("=").append("#{").append(property).append("}");
                 }else if(Objects.nonNull(value)){
@@ -234,10 +234,10 @@ public class BaseSqlProvider {
         Querier<?> querier = (Querier<?>)params.get("querier");
         BaseExample example = querier.getExample();
         params.clear();
-        TableINF table = MapperHelper.getTable(context);
+        TABLE_INF table = MapperHelper.getTable(context);
         Map<String,String> setValues = new HashMap<>();
         table.getColumns().forEach(item -> {
-            if(item.getIsPrimaryKey()){
+            if(item.getIsPK()){
                 //主键不能修改
                 return;
             }
@@ -260,10 +260,10 @@ public class BaseSqlProvider {
         Querier<?> querier = (Querier<?>)params.get("querier");
         BaseExample example = querier.getExample();
         params.clear();
-        TableINF table = MapperHelper.getTable(context);
+        TABLE_INF table = MapperHelper.getTable(context);
         Map<String,String> setValues = new HashMap<>();
         table.getColumns().forEach(item -> {
-            if(item.getIsPrimaryKey()){
+            if(item.getIsPK()){
                 //主键不能修改
                 return;
             }

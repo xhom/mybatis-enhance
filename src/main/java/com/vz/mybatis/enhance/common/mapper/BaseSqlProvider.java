@@ -142,7 +142,6 @@ public class BaseSqlProvider {
 
     public String insert(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
-        params.clear();
         TABLE_INF table = MapperHelper.getTable(context);
         List<String> columns = new ArrayList<>(), values = new ArrayList<>();
         table.getColumns().forEach(item -> {
@@ -165,13 +164,12 @@ public class BaseSqlProvider {
                 .insert(table.getTableName())
                 .values(columns, values)
                 .toStr();
-        printLog(context, sql, params);
+        printLog(context, sql, entity);
         return sql;
     }
 
     public String insertSelective(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
-        params.clear();
         TABLE_INF table = MapperHelper.getTable(context);
         List<String> columns = new ArrayList<>(), values = new ArrayList<>();
         table.getColumns().forEach(item -> {
@@ -196,7 +194,7 @@ public class BaseSqlProvider {
                 .insert(table.getTableName())
                 .values(columns, values)
                 .toStr();
-        printLog(context, sql, params);
+        printLog(context, sql, entity);
         return sql;
     }
 

@@ -45,7 +45,7 @@ public class BaseSqlProvider {
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " IN ("+getInWhere("idList", idList)+")")
                 .toStr();
-        printLog(context, "selectById", sql, params);
+        printLog(context, "selectByIds", sql, params);
         return sql;
     }
 

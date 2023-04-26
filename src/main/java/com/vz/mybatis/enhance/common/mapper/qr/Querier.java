@@ -14,7 +14,7 @@ import java.util.Collection;
  */
 public class Querier<T> {
     private final BaseExample example = new BaseExample();
-    private final Criteria criteria = example.createCriteria();
+    private Criteria criteria = example.createCriteria();
 
     public static <T> Querier<T> query(){
         return new Querier<>();
@@ -116,13 +116,13 @@ public class Querier<T> {
         return this;
     }
 
-    public Querier<T> orderByAsc(FFunction<T,?> function){
+    public Querier<T> asc(FFunction<T,?> function){
         ColumnINF columnInfo = getColumnInfo(function);
         example.addOrderBy(columnInfo.getColumn(), true);
         return this;
     }
 
-    public Querier<T> orderByDesc(FFunction<T,?> function){
+    public Querier<T> desc(FFunction<T,?> function){
         ColumnINF columnInfo = getColumnInfo(function);
         example.addOrderBy(columnInfo.getColumn(), false);
         return this;
@@ -142,6 +142,7 @@ public class Querier<T> {
 
     public Querier<T> clear(){
         example.clear();
+        this.criteria = example.createCriteria();
         return this;
     }
 

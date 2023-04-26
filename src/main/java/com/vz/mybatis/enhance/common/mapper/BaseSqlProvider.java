@@ -75,6 +75,16 @@ public class BaseSqlProvider {
         return sql;
     }
 
+    public String countAll(ProviderContext context){
+        TableINF table = MapperHelper.getTable(context);
+        String sql = SqlHelper.sql()
+                .count(table.getPrimaryKey().getColumn())
+                .from(table.getTableName())
+                .toStr();
+        printLog(context, "countAll", sql, Collections.emptyMap());
+        return sql;
+    }
+
     public String deleteById(Map<String,Object> params, ProviderContext context){
         params.remove("param1");
         TableINF table = MapperHelper.getTable(context);
@@ -158,7 +168,7 @@ public class BaseSqlProvider {
                 .insert(table.getTableName())
                 .values(columns, values)
                 .toStr();
-        printLog(context, "insertSelective", sql, entity);
+        printLog(context, "insertSelective", sql, params);
         return sql;
     }
 
@@ -188,7 +198,7 @@ public class BaseSqlProvider {
                 .set(setValues)
                 .where(condition.toString())
                 .toStr();
-        printLog(context, "updateById", sql, entity);
+        printLog(context, "updateById", sql, params);
         return sql;
     }
 
@@ -215,7 +225,7 @@ public class BaseSqlProvider {
         });
 
         String sql = SqlHelper.sql().update(table.getTableName()).set(setValues).where(condition.toString()).toStr();
-        printLog(context, "updateByIdSelective", sql, entity);
+        printLog(context, "updateByIdSelective", sql, params);
         return sql;
     }
 
@@ -241,7 +251,7 @@ public class BaseSqlProvider {
         });
 
         String sql = SqlHelper.sql().update(table.getTableName()).set(setValues).where(getCondition(example, params)).toStr();
-        printLog(context, "update", sql, entity);
+        printLog(context, "update", sql, params);
         return sql;
     }
 
@@ -270,7 +280,7 @@ public class BaseSqlProvider {
         });
 
         String sql = SqlHelper.sql().update(table.getTableName()).set(setValues).where(getCondition(example, params)).toStr();
-        printLog(context, "update", sql, entity);
+        printLog(context, "update", sql, params);
         return sql;
     }
 

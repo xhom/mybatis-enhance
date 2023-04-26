@@ -23,6 +23,9 @@ public interface BaseMapper<T,K>{
     @SelectProvider(type = BaseSqlProvider.class, method = "count")
     long count(@Param("querier") Querier<T> querier);
 
+    @SelectProvider(type = BaseSqlProvider.class, method = "countAll")
+    long countAll();
+
     @DeleteProvider(type = BaseSqlProvider.class, method = "deleteById")
     int deleteById(@Param("id") K id);
 

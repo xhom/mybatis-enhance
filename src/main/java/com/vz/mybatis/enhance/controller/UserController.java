@@ -39,8 +39,9 @@ public class UserController {
 
     @RequestMapping("/listAll")
     public Map<String,Object> listAll(){
+        long all = userMapper.countAll();
         List<TSupplierUser> supplierUserList = userMapper.selectAll();
-        return resp(0, supplierUserList);
+        return resp(all, supplierUserList);
     }
 
     @RequestMapping("/del/{id}")
@@ -58,7 +59,7 @@ public class UserController {
     @RequestMapping("/add")
     public Map<String,Object> add(@RequestParam(required = false, defaultValue = "1") Integer type){
         Querier<TSupplierUser> querier = Querier.<TSupplierUser>query()
-                .orderByDesc(TSupplierUser::getId)
+                .desc(TSupplierUser::getId)
                 .limit(1);
 
         List<TSupplierUser> supplierUserList = userMapper.selectList(querier);
@@ -76,9 +77,9 @@ public class UserController {
         return resp(rows, user);
     }
 
-    @RequestMapping("/upd/{id}")
-    public Map<String,Object> updateById(@RequestParam Long entId,
-                                         @RequestParam(required = false, defaultValue = "1") Integer type){
+    @RequestMapping("/update")
+    public Map<String,Object> update(@RequestParam Long entId,
+                                     @RequestParam(required = false, defaultValue = "1") Integer type){
         Querier<TSupplierUser> querier = Querier.<TSupplierUser>query().eq(TSupplierUser::getEnterpriseId, entId);
 
         TSupplierUser user = new TSupplierUser();
@@ -90,9 +91,9 @@ public class UserController {
         return resp(rows, null);
     }
 
-    @RequestMapping("/update")
-    public Map<String,Object> update(@PathVariable("id") Long id,
-                                     @RequestParam(required = false, defaultValue = "1") Integer type){
+    @RequestMapping("/upd/{id}")
+    public Map<String,Object> updateById(@PathVariable("id") Long id,
+                                         @RequestParam(required = false, defaultValue = "1") Integer type){
         TSupplierUser user = new TSupplierUser();
         user.setId(id);
         user.setPassword(UUID.randomUUID().toString().replace("-", ""));

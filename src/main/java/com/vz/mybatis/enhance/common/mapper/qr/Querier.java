@@ -34,79 +34,97 @@ public class Querier<T> {
         return this;
     }
 
-    public <V> Querier<T> eq(FFunction<T,V> function, V value) {
+    public Querier<T> eq(FFunction<T,?> function, Object value) {
         Column column = getColumn(function);
         criteria.eq(column.getColumn(), value, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> neq(FFunction<T,V> function, V value) {
+    public Querier<T> neq(FFunction<T,?> function, Object value) {
         Column column = getColumn(function);
         criteria.neq(column.getColumn(), value, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> gt(FFunction<T,V> function, V value) {
+    public Querier<T> gt(FFunction<T,?> function, Object value) {
         Column column = getColumn(function);
         criteria.gt(column.getColumn(), value, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> gte(FFunction<T,V> function, V value) {
+    public Querier<T> gte(FFunction<T,?> function, Object value) {
         Column column = getColumn(function);
         criteria.gte(column.getColumn(), value, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> lt(FFunction<T,V> function, V value) {
+    public Querier<T> lt(FFunction<T,?> function, Object value) {
         Column column = getColumn(function);
         criteria.lt(column.getColumn(), value, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> lte(FFunction<T,V> function, V value) {
+    public Querier<T> lte(FFunction<T,?> function, Object value) {
         Column column = getColumn(function);
         criteria.lte(column.getColumn(), value, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> like(FFunction<T,V> function, V value) {
+    public Querier<T> like(FFunction<T,?> function, Object value) {
         Column column = getColumn(function);
         criteria.like(column.getColumn(), value, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> likeLeft(FFunction<T,V> function, V value) {
+    public Querier<T> likeLeft(FFunction<T,?> function, Object value) {
         Column column = getColumn(function);
         criteria.likeLeft(column.getColumn(), value, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> likeRight(FFunction<T,V> function, V value) {
+    public Querier<T> likeRight(FFunction<T,?> function, Object value) {
         Column column = getColumn(function);
         criteria.likeRight(column.getColumn(), value, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> in(FFunction<T,V> function, Collection<V> values) {
+    public Querier<T> notLike(FFunction<T,?> function, Object value) {
+        Column column = getColumn(function);
+        criteria.notLike(column.getColumn(), value, column.getProperty());
+        return this;
+    }
+
+    public Querier<T> notLikeLeft(FFunction<T,?> function, Object value) {
+        Column column = getColumn(function);
+        criteria.notLikeLeft(column.getColumn(), value, column.getProperty());
+        return this;
+    }
+
+    public Querier<T> notLikeRight(FFunction<T,?> function, Object value) {
+        Column column = getColumn(function);
+        criteria.notLikeRight(column.getColumn(), value, column.getProperty());
+        return this;
+    }
+
+    public Querier<T> in(FFunction<T,?> function, Collection<?> values) {
         Column column = getColumn(function);
         criteria.in(column.getColumn(), values, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> notIn(FFunction<T,V> function, Collection<V> values) {
+    public Querier<T> notIn(FFunction<T,?> function, Collection<?> values) {
         Column column = getColumn(function);
         criteria.notIn(column.getColumn(), values, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> between(FFunction<T,V> function, V value1, V value2) {
+    public Querier<T> between(FFunction<T,?> function, Object value1, Object value2) {
         Column column = getColumn(function);
         criteria.between(column.getColumn(), value1, value2, column.getProperty());
         return this;
     }
 
-    public <V> Querier<T> notBetween(FFunction<T,V> function, V value1, V value2) {
+    public Querier<T> notBetween(FFunction<T,?> function, Object value1, Object value2) {
         Column column = getColumn(function);
         criteria.notBetween(column.getColumn(), value1, value2, column.getProperty());
         return this;

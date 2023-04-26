@@ -93,6 +93,21 @@ public class GeneratedCriteria {
         return (Criteria) this;
     }
 
+    public Criteria notLike(String column, Object value, String property) {
+        addCriterion(column, " NOT LIKE ", "%"+value+"%", property);
+        return (Criteria) this;
+    }
+
+    public Criteria notLikeLeft(String column, Object value, String property) {
+        addCriterion(column, " NOT LIKE ", value+"%", property);
+        return (Criteria) this;
+    }
+
+    public Criteria notLikeRight(String column, Object value, String property) {
+        addCriterion(column, " NOT LIKE ", "%"+value, property);
+        return (Criteria) this;
+    }
+
     public Criteria in(String column, Collection<?> values, String property) {
         addCriterion(column, " IN ", values, property);
         return (Criteria) this;

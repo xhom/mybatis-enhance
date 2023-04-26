@@ -24,7 +24,7 @@ public interface BaseMapper<T,K>{
 
     /**
      * 按主键列表批量查询记录
-     * @param idList id列表
+     * @param idList 主键列表
      * @return 记录列表
      */
     @SelectProvider(type = BaseSqlProvider.class, method = "selectByIds")
@@ -67,6 +67,14 @@ public interface BaseMapper<T,K>{
      */
     @DeleteProvider(type = BaseSqlProvider.class, method = "deleteById")
     int deleteById(@Param("id") K id);
+
+    /**
+     * 按主键列表批量删除记录
+     * @param idList 主键列表
+     * @return 删除成功数量
+     */
+    @DeleteProvider(type = BaseSqlProvider.class, method = "deleteByIds")
+    int deleteByIds(@Param("idList") Collection<K> idList);
 
     /**
      * 按条件删除记录

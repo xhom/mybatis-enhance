@@ -43,7 +43,7 @@ public class BaseSqlProvider {
         String sql =  SqlHelper.sql()
                 .select(table.selectColumnsAsProperties())
                 .from(table.getTableName())
-                .where(pkColumn.getColumn() + " IN ("+getInWhere("idList", idList)+")")
+                .where(pkColumn.getColumn() + " IN (" + getInWhere("idList", idList) + ")")
                 .toStr();
         printLog(context, "selectByIds", sql, params);
         return sql;
@@ -109,6 +109,20 @@ public class BaseSqlProvider {
                 .where(pkColumn.getColumn() + " = #{id}")
                 .toStr();
         printLog(context, "deleteById", sql, params);
+        return sql;
+    }
+
+    public String deleteByIds(Map<String,Object> params, ProviderContext context){
+        params.remove("param1");
+        Object idList = params.get("idList");
+        TABLE_INF table = MapperHelper.getTable(context);
+        COLUMN_INF pkColumn = table.getPkColumn();
+        String sql =  SqlHelper.sql()
+                .delete()
+                .from(table.getTableName())
+                .where(pkColumn.getColumn() + " IN (" + getInWhere("idList", idList) + ")")
+                .toStr();
+        printLog(context, "deleteByIds", sql, params);
         return sql;
     }
 

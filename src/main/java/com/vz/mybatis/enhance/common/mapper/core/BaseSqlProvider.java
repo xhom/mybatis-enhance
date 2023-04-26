@@ -8,8 +8,6 @@ import com.vz.mybatis.enhance.common.mapper.qr.BaseExample;
 import com.vz.mybatis.enhance.common.mapper.qr.Criterion;
 import com.vz.mybatis.enhance.common.mapper.qr.Querier;
 import org.apache.ibatis.builder.annotation.ProviderContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -20,19 +18,16 @@ import java.util.*;
  * @date 2023/4/24 13:18
  */
 public class BaseSqlProvider {
-    private static final Logger logger = LoggerFactory.getLogger(BaseSqlProvider.class);
 
     public String selectById(Map<String,Object> params, ProviderContext context){
         params.remove("param1");
         TABLE_INF table = MapperHelper.getTable(context);
         COLUMN_INF pkColumn = table.getPkColumn();
-        String sql =  SqlHelper.sql()
+        return SqlHelper.sql()
                 .select(table.selectColumnsAsProperties())
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " = #{id}")
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     public String selectByIds(Map<String,Object> params, ProviderContext context){
@@ -40,13 +35,11 @@ public class BaseSqlProvider {
         Object idList = params.get("idList");
         TABLE_INF table = MapperHelper.getTable(context);
         COLUMN_INF pkColumn = table.getPkColumn();
-        String sql =  SqlHelper.sql()
+        return SqlHelper.sql()
                 .select(table.selectColumnsAsProperties())
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " IN (" + getInWhere("idList", idList) + ")")
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     public String selectOne(Map<String,Object> params, ProviderContext context){
@@ -54,15 +47,13 @@ public class BaseSqlProvider {
         params.clear();
         TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .select(table.selectColumnsAsProperties(), example.getDistinct())
                 .from(table.getTableName())
                 .where(getCondition(example, params))
                 .orderBy(example.getOrderByClause())
                 .limit("1") //只取查询结果中第一条记录
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     public String selectList(Map<String,Object> params, ProviderContext context){
@@ -70,25 +61,21 @@ public class BaseSqlProvider {
         params.clear();
         TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .select(table.selectColumnsAsProperties(), example.getDistinct())
                 .from(table.getTableName())
                 .where(getCondition(example, params))
                 .orderBy(example.getOrderByClause())
                 .limit(example.getLimitClause())
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     public String selectAll(ProviderContext context){
         TABLE_INF table = MapperHelper.getTable(context);
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .select(table.selectColumnsAsProperties())
                 .from(table.getTableName())
-                .toStr();
-        printLog(context, sql, Collections.emptyMap());
-        return sql;
+                .toStrWithLog(context, null);
     }
 
     public String count(Map<String,Object> params, ProviderContext context){
@@ -96,36 +83,30 @@ public class BaseSqlProvider {
         params.clear();
         TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .count(table.getPkColumn().getColumn(), example.getDistinct())
                 .from(table.getTableName())
                 .where(getCondition(example, params))
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     public String countAll(ProviderContext context){
         TABLE_INF table = MapperHelper.getTable(context);
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .count(table.getPkColumn().getColumn())
                 .from(table.getTableName())
-                .toStr();
-        printLog(context, sql, Collections.emptyMap());
-        return sql;
+                .toStrWithLog(context, null);
     }
 
     public String deleteById(Map<String,Object> params, ProviderContext context){
         params.remove("param1");
         TABLE_INF table = MapperHelper.getTable(context);
         COLUMN_INF pkColumn = table.getPkColumn();
-        String sql =  SqlHelper.sql()
+        return SqlHelper.sql()
                 .delete()
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " = #{id}")
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     public String deleteByIds(Map<String,Object> params, ProviderContext context){
@@ -133,13 +114,11 @@ public class BaseSqlProvider {
         Object idList = params.get("idList");
         TABLE_INF table = MapperHelper.getTable(context);
         COLUMN_INF pkColumn = table.getPkColumn();
-        String sql =  SqlHelper.sql()
+        return SqlHelper.sql()
                 .delete()
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " IN (" + getInWhere("idList", idList) + ")")
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     public String delete(Map<String,Object> params, ProviderContext context){
@@ -147,13 +126,11 @@ public class BaseSqlProvider {
         params.clear();
         TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .delete()
                 .from(table.getTableName())
                 .where(getCondition(example, params))
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     public String insert(Map<String,Object> params, ProviderContext context){
@@ -176,12 +153,10 @@ public class BaseSqlProvider {
             }
         });
 
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .insert(table.getTableName())
                 .values(columns, values)
-                .toStr();
-        printLog(context, sql, entity);
-        return sql;
+                .toStrWithLog(context, entity);
     }
 
     public String insertSelective(Map<String,Object> params, ProviderContext context){
@@ -206,12 +181,10 @@ public class BaseSqlProvider {
             }
         });
 
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .insert(table.getTableName())
                 .values(columns, values)
-                .toStr();
-        printLog(context, sql, entity);
-        return sql;
+                .toStrWithLog(context, entity);
     }
 
     public String updateById(Map<String,Object> params, ProviderContext context){
@@ -239,13 +212,11 @@ public class BaseSqlProvider {
             }
         });
 
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .update(table.getTableName())
                 .set(setValues)
                 .where(condition.toString())
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     public String updateByIdSelective(Map<String,Object> params, ProviderContext context){
@@ -274,13 +245,11 @@ public class BaseSqlProvider {
             }
         });
 
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .update(table.getTableName())
                 .set(setValues)
                 .where(condition.toString())
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     public String update(Map<String,Object> params, ProviderContext context){
@@ -304,13 +273,11 @@ public class BaseSqlProvider {
             }
         });
 
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .update(table.getTableName())
                 .set(setValues)
                 .where(getCondition(example, params))
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     public String updateSelective(Map<String,Object> params, ProviderContext context){
@@ -337,13 +304,11 @@ public class BaseSqlProvider {
             }
         });
 
-        String sql = SqlHelper.sql()
+        return SqlHelper.sql()
                 .update(table.getTableName())
                 .set(setValues)
                 .where(getCondition(example, params))
-                .toStr();
-        printLog(context, sql, params);
-        return sql;
+                .toStrWithLog(context, params);
     }
 
     private static String getCondition(BaseExample example, Map<String,Object> params){
@@ -397,11 +362,4 @@ public class BaseSqlProvider {
         }
         return inWhere;
     }
-
-    private static void printLog(ProviderContext context, String sql, Object params){
-        String mapperMethodName = context.getMapperType().getName()+"."+context.getMapperMethod().getName();
-        String separator = "------------------------------------------------------------------------------";
-        logger.info("\n{}\nMethod: {}\nSql: {} \nParams: {}\n{}", separator, mapperMethodName, sql, params, separator);
-    }
-
 }

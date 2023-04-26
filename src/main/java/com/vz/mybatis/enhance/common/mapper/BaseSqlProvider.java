@@ -36,7 +36,7 @@ public class BaseSqlProvider {
     }
 
     public String selectList(Map<String,Object> params, ProviderContext context){
-        Querier<?> querier = (Querier<?>)params.get("query");
+        Querier<?> querier = (Querier<?>)params.get("querier");
         params.clear();
         TableINF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
@@ -62,7 +62,7 @@ public class BaseSqlProvider {
     }
 
     public String count(Map<String,Object> params, ProviderContext context){
-        Querier<?> querier = (Querier<?>)params.get("query");
+        Querier<?> querier = (Querier<?>)params.get("querier");
         params.clear();
         TableINF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
@@ -89,7 +89,7 @@ public class BaseSqlProvider {
     }
 
     public String delete(Map<String,Object> params, ProviderContext context){
-        Querier<?> querier = (Querier<?>)params.get("query");
+        Querier<?> querier = (Querier<?>)params.get("querier");
         params.clear();
         TableINF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
@@ -221,7 +221,7 @@ public class BaseSqlProvider {
 
     public String update(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
-        Querier<?> querier = (Querier<?>)params.get("query");
+        Querier<?> querier = (Querier<?>)params.get("querier");
         BaseExample example = querier.getExample();
         params.clear();
         TableINF table = MapperHelper.getTable(context);
@@ -247,7 +247,7 @@ public class BaseSqlProvider {
 
     public String updateSelective(Map<String,Object> params, ProviderContext context){
         Object entity = params.get("record");
-        Querier<?> querier = (Querier<?>)params.get("query");
+        Querier<?> querier = (Querier<?>)params.get("querier");
         BaseExample example = querier.getExample();
         params.clear();
         TableINF table = MapperHelper.getTable(context);

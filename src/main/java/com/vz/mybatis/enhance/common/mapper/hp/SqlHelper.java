@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * @author visy.wang
- * @description:
+ * @description: SQL助手（生成SQL语句）
  * @date 2023/4/24 17:39
  */
 public class SqlHelper {
@@ -112,5 +112,4 @@ public class SqlHelper {
     public String toStr(){
         return sb.toString();
     }
-
 }

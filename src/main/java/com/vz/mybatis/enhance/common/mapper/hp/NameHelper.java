@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author visy.wang
- * @description:
+ * @description: 名称助手
  * @date 2023/4/25 10:30
  */
 public class NameHelper {

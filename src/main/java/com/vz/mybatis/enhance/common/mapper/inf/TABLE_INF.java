@@ -11,7 +11,7 @@ import java.util.List;
  * @date 2023/4/24 14:08
  */
 @Data
-public class TableINF {
+public class TABLE_INF {
     /**
      * 关联Java类Class
      */
@@ -23,13 +23,13 @@ public class TableINF {
     /**
      * 主键列
      */
-    private ColumnINF primaryKey;
+    private COLUMN_INF pkColumn;
     /**
      * 所有列集合
      */
-    private List<ColumnINF> columns = new ArrayList<>();
+    private List<COLUMN_INF> columns = new ArrayList<>();
 
-    public void addColumn(ColumnINF column){
+    public void addColumn(COLUMN_INF column){
         columns.add(column);
     }
 

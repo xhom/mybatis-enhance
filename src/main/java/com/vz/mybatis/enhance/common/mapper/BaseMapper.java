@@ -31,7 +31,7 @@ public interface BaseMapper<T,K>{
     List<T> selectByIds(@Param("idList") Collection<K> idList);
 
     /**
-     * 按条件查询查询一条记录（多条记录时，自动取第一条）
+     * 按条件查询一条记录（多条记录时，自动取第一条）
      * @param querier 查询条件
      * @return 记录
      */

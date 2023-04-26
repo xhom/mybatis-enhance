@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author visy.wang
@@ -23,6 +24,12 @@ public class UserController {
     public Map<String,Object> getById(@PathVariable("id") Long id){
         TSupplierUser user = userMapper.selectById(id);
         return resp(0, user);
+    }
+
+    @RequestMapping("/getList/{ids}")
+    public Map<String,Object> getByIds(@PathVariable("ids") String ids){
+        List<TSupplierUser> userList = userMapper.selectByIds(Arrays.stream(ids.split(",")).map(Long::valueOf).collect(Collectors.toList()));
+        return resp(0, userList);
     }
 
     @RequestMapping("/list")

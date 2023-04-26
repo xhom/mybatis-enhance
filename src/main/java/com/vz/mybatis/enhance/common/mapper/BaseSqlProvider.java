@@ -374,7 +374,7 @@ public class BaseSqlProvider {
             if(!CollectionUtils.isEmpty(collection)){
                 StringBuilder inList = new StringBuilder();
                 for (int i=0; i<collection.size(); i++) {
-                    inList.append("#{").append(property).append("[").append(i++).append("]},");
+                    inList.append("#{").append(property).append("[").append(i).append("]},");
                 }
                 inWhere = inList.deleteCharAt(inList.length()-1).toString();
             }

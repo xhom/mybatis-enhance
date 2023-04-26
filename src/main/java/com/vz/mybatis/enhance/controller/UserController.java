@@ -3,16 +3,10 @@ package com.vz.mybatis.enhance.controller;
 import com.vz.mybatis.enhance.common.mapper.qr.Querier;
 import com.vz.mybatis.enhance.entity.TSupplierUser;
 import com.vz.mybatis.enhance.mapper.UserMapper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author visy.wang
@@ -25,55 +19,95 @@ public class UserController {
     @Resource
     private UserMapper userMapper;
 
-    @GetMapping("/get/{id}")
-    public TSupplierUser getUser(@PathVariable("id") Long id){
-        return userMapper.selectById(id);
+    @RequestMapping("/get/{id}")
+    public Map<String,Object> getById(@PathVariable("id") Long id){
+        TSupplierUser user = userMapper.selectById(id);
+        return resp(0, user);
     }
 
-    @GetMapping("/list")
-    public Map<String,Object> userList(){
+    @RequestMapping("/list")
+    public Map<String,Object> list(@RequestParam Long entId,
+                                   @RequestParam(required = false, defaultValue = "20") Integer limit){
         Querier<TSupplierUser> querier = Querier.<TSupplierUser>query()
-                .gt(TSupplierUser::getId, 4)
-                .gt(TSupplierUser::getEnterpriseId, 3)
-                .limit(3);
+                .gt(TSupplierUser::getEnterpriseId, entId)
+                .limit(limit);
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("total", userMapper.count(querier));
-        map.put("list", userMapper.select(querier));
-        return map;
+        long total = userMapper.count(querier);
+        List<TSupplierUser> supplierUserList = userMapper.selectList(querier);
+        return resp(total, supplierUserList);
     }
 
-    @GetMapping("/listAll")
-    public List<TSupplierUser> listAll(){
-        return userMapper.select(Querier.query());
+    @RequestMapping("/listAll")
+    public Map<String,Object> listAll(){
+        List<TSupplierUser> supplierUserList = userMapper.selectAll();
+        return resp(0, supplierUserList);
     }
 
-    @GetMapping("/del/{id}")
-    public Integer deleteUser(@PathVariable("id") Long id){
-        int count = userMapper.deleteById(id);
-        System.out.println("delete rows ="+count);
-        return count;
+    @RequestMapping("/del/{id}")
+    public Map<String,Object> deleteById(@PathVariable("id") Long id){
+        int rows = userMapper.deleteById(id);
+        return resp(rows, null);
     }
 
-    @GetMapping("/add")
-    public TSupplierUser addUser(){
+    @RequestMapping("/delete")
+    public Map<String,Object> delete(@RequestParam Long entId){
+        int rows = userMapper.delete(Querier.<TSupplierUser>query().eq(TSupplierUser::getEnterpriseId, entId));
+        return resp(rows, null);
+    }
+
+    @RequestMapping("/add")
+    public Map<String,Object> add(@RequestParam(required = false, defaultValue = "1") Integer type){
         Querier<TSupplierUser> querier = Querier.<TSupplierUser>query()
                 .orderByDesc(TSupplierUser::getId)
                 .limit(1);
-        List<TSupplierUser> supplierUserList = userMapper.select(querier);
+
+        List<TSupplierUser> supplierUserList = userMapper.selectList(querier);
         Long newId = supplierUserList.get(0).getId()+1;
 
         TSupplierUser user = new TSupplierUser();
         user.setUserName("张三"+newId);
         user.setPhone("19301293031"+newId);
-        user.setPassword("aaaaaaa");
+        user.setPassword(UUID.randomUUID().toString().replace("-", ""));
         user.setCreateDt(new Date());
         user.setEnterpriseId(newId);
-        userMapper.insert(user);
 
+        int rows = type==1 ? userMapper.insert(user) : userMapper.insertSelective(user);
 
-        System.out.println("new User: "+user);
-        return userMapper.selectById(newId);
+        return resp(rows, user);
+    }
+
+    @RequestMapping("/upd/{id}")
+    public Map<String,Object> updateById(@RequestParam Long entId,
+                                         @RequestParam(required = false, defaultValue = "1") Integer type){
+        Querier<TSupplierUser> querier = Querier.<TSupplierUser>query().eq(TSupplierUser::getEnterpriseId, entId);
+
+        TSupplierUser user = new TSupplierUser();
+        user.setPassword(UUID.randomUUID().toString().replace("-", ""));
+        user.setCreateDt(new Date());
+
+        int rows = type==1 ? userMapper.update(user, querier) : userMapper.updateSelective(user, querier);
+
+        return resp(rows, null);
+    }
+
+    @RequestMapping("/update")
+    public Map<String,Object> update(@PathVariable("id") Long id,
+                                     @RequestParam(required = false, defaultValue = "1") Integer type){
+        TSupplierUser user = new TSupplierUser();
+        user.setId(id);
+        user.setPassword(UUID.randomUUID().toString().replace("-", ""));
+        user.setCreateDt(new Date());
+
+        int rows = type==1 ? userMapper.updateById(user) : userMapper.updateByIdSelective(user);
+
+        return resp(rows, null);
+    }
+
+    private Map<String,Object> resp(long total, Object data){
+        Map<String,Object> mp = new HashMap<>();
+        mp.put("rows", total);
+        mp.put("data", data);
+        return mp;
     }
 
 }

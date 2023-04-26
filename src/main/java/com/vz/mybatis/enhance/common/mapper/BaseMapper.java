@@ -14,20 +14,20 @@ public interface BaseMapper<T,K>{
     @SelectProvider(type = BaseSqlProvider.class, method = "selectById")
     T selectById(@Param("id") K id);
 
-    @SelectProvider(type = BaseSqlProvider.class, method = "select")
-    List<T> select(@Param("querier") Querier<T> querier);
+    @SelectProvider(type = BaseSqlProvider.class, method = "selectList")
+    List<T> selectList(@Param("query") Querier<T> querier);
 
     @SelectProvider(type = BaseSqlProvider.class, method = "selectAll")
     List<T> selectAll();
 
     @SelectProvider(type = BaseSqlProvider.class, method = "count")
-    long count(@Param("querier") Querier<T> querier);
+    long count(@Param("query") Querier<T> querier);
 
     @DeleteProvider(type = BaseSqlProvider.class, method = "deleteById")
     int deleteById(@Param("id") K id);
 
     @DeleteProvider(type = BaseSqlProvider.class, method = "delete")
-    int delete(@Param("querier") Querier<T> querier);
+    int delete(@Param("query") Querier<T> querier);
 
     @InsertProvider(type = BaseSqlProvider.class, method = "insert")
     int insert(@Param("record") T record);
@@ -42,8 +42,8 @@ public interface BaseMapper<T,K>{
     int updateByIdSelective(@Param("record") T record);
 
     @UpdateProvider(type = BaseSqlProvider.class, method = "update")
-    int update(@Param("record") T record, @Param("querier") Querier<T> querier);
+    int update(@Param("record") T record, @Param("query") Querier<T> querier);
 
     @UpdateProvider(type = BaseSqlProvider.class, method = "updateSelective")
-    int updateSelective(@Param("record") T record, @Param("querier") Querier<T> querier);
+    int updateSelective(@Param("record") T record, @Param("query") Querier<T> querier);
 }

@@ -35,6 +35,20 @@ public class BaseSqlProvider {
         return sql;
     }
 
+    public String selectByIds(Map<String,Object> params, ProviderContext context){
+        params.remove("param1");
+        Object idList = params.get("idList");
+        TABLE_INF table = MapperHelper.getTable(context);
+        COLUMN_INF pkColumn = table.getPkColumn();
+        String sql =  SqlHelper.sql()
+                .select(table.selectColumnsAsProperties())
+                .from(table.getTableName())
+                .where(pkColumn.getColumn() + " IN ("+getInWhere("idList", idList)+")")
+                .toStr();
+        printLog(context, "selectById", sql, params);
+        return sql;
+    }
+
     public String selectList(Map<String,Object> params, ProviderContext context){
         Querier<?> querier = (Querier<?>)params.get("querier");
         params.clear();
@@ -302,17 +316,7 @@ public class BaseSqlProvider {
                     condition.append(cri.getCondition()).append("#{").append(property).append("}");
                 }else if(cri.isListValue()){
                     params.put(property, value);
-                    String inWhere = "";
-                    if(value instanceof Collection){
-                        Collection<?> collection = (Collection<?>) value;
-                        if(!CollectionUtils.isEmpty(collection)){
-                            StringBuilder inList = new StringBuilder();
-                            for (int i=0; i<collection.size(); i++) {
-                                inList.append("#{").append(property).append("[").append(i++).append("]},");
-                            }
-                            inWhere = inList.deleteCharAt(inList.length()-1).toString();
-                        }
-                    }
+                    String inWhere = getInWhere(property, value);
                     condition.append(cri.getCondition()).append("(").append(inWhere).append(")");
                 }else if(cri.isBetweenValue()){
                     String property1 = property+"1", property2 = property+"2";
@@ -329,6 +333,21 @@ public class BaseSqlProvider {
             }
         });
         return condition.toString();
+    }
+
+    private static String getInWhere(String property, Object value){
+        String inWhere = "";
+        if(value instanceof Collection){
+            Collection<?> collection = (Collection<?>) value;
+            if(!CollectionUtils.isEmpty(collection)){
+                StringBuilder inList = new StringBuilder();
+                for (int i=0; i<collection.size(); i++) {
+                    inList.append("#{").append(property).append("[").append(i++).append("]},");
+                }
+                inWhere = inList.deleteCharAt(inList.length()-1).toString();
+            }
+        }
+        return inWhere;
     }
 
     private static void printLog(ProviderContext context, String method, String sql, Object params){

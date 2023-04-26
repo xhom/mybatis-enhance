@@ -3,6 +3,7 @@ package com.vz.mybatis.enhance.common.mapper;
 import com.vz.mybatis.enhance.common.mapper.qr.Querier;
 import org.apache.ibatis.annotations.*;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -16,10 +17,18 @@ public interface BaseMapper<T,K>{
     /**
      * 按主键查询记录
      * @param id 主键
-     * @return 对应记录
+     * @return 记录
      */
     @SelectProvider(type = BaseSqlProvider.class, method = "selectById")
     T selectById(@Param("id") K id);
+
+    /**
+     * 按主键列表批量查询记录
+     * @param idList id列表
+     * @return 记录列表
+     */
+    @SelectProvider(type = BaseSqlProvider.class, method = "selectByIds")
+    List<T> selectByIds(@Param("idList") Collection<K> idList);
 
     /**
      * 按条件查询记录列表

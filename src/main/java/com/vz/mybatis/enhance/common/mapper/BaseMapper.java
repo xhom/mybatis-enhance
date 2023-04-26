@@ -31,6 +31,14 @@ public interface BaseMapper<T,K>{
     List<T> selectByIds(@Param("idList") Collection<K> idList);
 
     /**
+     * 按条件查询查询一条记录（多条记录时，自动取第一条）
+     * @param querier 查询条件
+     * @return 记录
+     */
+    @SelectProvider(type = BaseSqlProvider.class, method = "selectOne")
+    T selectOne(@Param("querier") Querier<T> querier);
+
+    /**
      * 按条件查询记录列表
      * @param querier 查询条件
      * @return 记录列表

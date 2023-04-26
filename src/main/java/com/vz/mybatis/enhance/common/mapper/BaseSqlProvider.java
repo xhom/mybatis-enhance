@@ -49,6 +49,22 @@ public class BaseSqlProvider {
         return sql;
     }
 
+    public String selectOne(Map<String,Object> params, ProviderContext context){
+        Querier<?> querier = (Querier<?>)params.get("querier");
+        params.clear();
+        TABLE_INF table = MapperHelper.getTable(context);
+        BaseExample example = querier.getExample();
+        String sql = SqlHelper.sql()
+                .select(table.selectColumnsAsProperties(), example.getDistinct())
+                .from(table.getTableName())
+                .where(getCondition(example, params))
+                .orderBy(example.getOrderByClause())
+                .limit("1") //只取查询结果中第一条记录
+                .toStr();
+        printLog(context, sql, params);
+        return sql;
+    }
+
     public String selectList(Map<String,Object> params, ProviderContext context){
         Querier<?> querier = (Querier<?>)params.get("querier");
         params.clear();

@@ -44,6 +44,13 @@ public class UserController {
         return resp(total, supplierUserList);
     }
 
+    @RequestMapping("/getOne")
+    public Map<String,Object> getOne(@RequestParam Long entId){
+        Querier<TSupplierUser> querier = Querier.<TSupplierUser>query()
+                .gt(TSupplierUser::getEnterpriseId, entId).asc(TSupplierUser::getId);
+        return resp(0, userMapper.selectOne(querier));
+    }
+
     @RequestMapping("/listAll")
     public Map<String,Object> listAll(){
         long all = userMapper.countAll();

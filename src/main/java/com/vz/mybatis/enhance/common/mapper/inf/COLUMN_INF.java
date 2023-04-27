@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 
 /**
  * @author visy.wang
- * @description: 表的列信息
+ * @description: 列信息
  * @date 2023/4/24 14:57
  */
 @Data

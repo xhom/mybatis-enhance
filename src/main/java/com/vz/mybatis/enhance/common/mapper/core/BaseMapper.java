@@ -107,7 +107,7 @@ public interface BaseMapper<T,K>{
      * @return 新增成功数量
      */
     @InsertProvider(type = BaseSqlProvider.class, method = "insertSelective")
-    @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "record.id")
+    @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "record.id") //TODO 暂未实现任意主键名称的写回
     int insertSelective(@Param("record") T record);
 
     /**

@@ -14,7 +14,7 @@ import java.util.*;
 
 /**
  * @author visy.wang
- * @description:
+ * @description: 基础SQL生成
  * @date 2023/4/24 13:18
  */
 public class BaseSqlProvider {
@@ -24,7 +24,7 @@ public class BaseSqlProvider {
         TABLE_INF table = MapperHelper.getTable(context);
         COLUMN_INF pkColumn = table.getPkColumn();
         return SqlHelper.sql()
-                .select(table.selectColumnsAsProperties())
+                .select(table.allColumns())
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " = #{id}")
                 .toStrWithLog(context, params);
@@ -36,7 +36,7 @@ public class BaseSqlProvider {
         TABLE_INF table = MapperHelper.getTable(context);
         COLUMN_INF pkColumn = table.getPkColumn();
         return SqlHelper.sql()
-                .select(table.selectColumnsAsProperties())
+                .select(table.allColumns())
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " IN (" + getInWhere("idList", idList) + ")")
                 .toStrWithLog(context, params);
@@ -48,7 +48,7 @@ public class BaseSqlProvider {
         TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         return SqlHelper.sql()
-                .select(table.selectColumnsAsProperties(), example.getDistinct())
+                .select(table.allColumns(), example.getDistinct())
                 .from(table.getTableName())
                 .where(getCondition(example, params))
                 .orderBy(example.getOrderByClause())
@@ -62,7 +62,7 @@ public class BaseSqlProvider {
         TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         return SqlHelper.sql()
-                .select(table.selectColumnsAsProperties(), example.getDistinct())
+                .select(table.allColumns(), example.getDistinct())
                 .from(table.getTableName())
                 .where(getCondition(example, params))
                 .orderBy(example.getOrderByClause())
@@ -73,7 +73,7 @@ public class BaseSqlProvider {
     public String selectAll(ProviderContext context){
         TABLE_INF table = MapperHelper.getTable(context);
         return SqlHelper.sql()
-                .select(table.selectColumnsAsProperties())
+                .select(table.allColumns())
                 .from(table.getTableName())
                 .toStrWithLog(context, null);
     }

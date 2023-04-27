@@ -33,11 +33,19 @@ public class TABLE_INF {
         columns.add(column);
     }
 
-    public String selectColumnsAsProperties(){
-        StringBuilder selectSQL = new StringBuilder();
+    public String allColumns(){
+        return allColumns(true);
+    }
+
+    public String allColumns(boolean isAlias){
+        StringBuilder selectColumns = new StringBuilder();
         columns.forEach(column -> {
-            selectSQL.append(column.getColumn()).append(" AS ").append(column.getProperty()).append(",");
+            selectColumns.append(column.getColumn());
+            if(isAlias){
+                selectColumns.append(" AS ").append(column.getProperty());
+            }
+            selectColumns.append(",");
         });
-        return selectSQL.deleteCharAt(selectSQL.length()-1).toString();
+        return selectColumns.deleteCharAt(selectColumns.length()-1).toString();
     }
 }

@@ -93,9 +93,9 @@ public class SqlHelper {
         return this;
     }
 
-    public SqlHelper where(String condition){
-        if(StringUtils.hasText(condition)){
-            sb.append(" WHERE ").append(condition);
+    public SqlHelper where(String conditions){
+        if(StringUtils.hasText(conditions)){
+            sb.append(" WHERE ").append(conditions);
         }
         return this;
     }

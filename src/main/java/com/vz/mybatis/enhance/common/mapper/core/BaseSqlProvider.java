@@ -38,7 +38,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .select(table.allColumns())
                 .from(table.getTableName())
-                .where(pkColumn.getColumn() + " IN (" + getInWhere("idList", idList) + ")")
+                .where(getInCondition(pkColumn.getColumn(), "idList", idList))
                 .toStrWithLog(context, params);
     }
 
@@ -50,7 +50,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .select(table.allColumns(), example.getDistinct())
                 .from(table.getTableName())
-                .where(getCondition(example, params))
+                .where(getConditions(example, params))
                 .orderBy(example.getOrderByClause())
                 .limit("1") //只取查询结果中第一条记录
                 .toStrWithLog(context, params);
@@ -64,7 +64,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .select(table.allColumns(), example.getDistinct())
                 .from(table.getTableName())
-                .where(getCondition(example, params))
+                .where(getConditions(example, params))
                 .orderBy(example.getOrderByClause())
                 .limit(example.getLimitClause())
                 .toStrWithLog(context, params);
@@ -86,7 +86,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .count(table.getPkColumn().getColumn(), example.getDistinct())
                 .from(table.getTableName())
-                .where(getCondition(example, params))
+                .where(getConditions(example, params))
                 .toStrWithLog(context, params);
     }
 
@@ -117,7 +117,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .delete()
                 .from(table.getTableName())
-                .where(pkColumn.getColumn() + " IN (" + getInWhere("idList", idList) + ")")
+                .where(getInCondition(pkColumn.getColumn(), "idList", idList))
                 .toStrWithLog(context, params);
     }
 
@@ -129,7 +129,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .delete()
                 .from(table.getTableName())
-                .where(getCondition(example, params))
+                .where(getConditions(example, params))
                 .toStrWithLog(context, params);
     }
 
@@ -276,7 +276,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .update(table.getTableName())
                 .set(setValues)
-                .where(getCondition(example, params))
+                .where(getConditions(example, params))
                 .toStrWithLog(context, params);
     }
 
@@ -307,11 +307,11 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .update(table.getTableName())
                 .set(setValues)
-                .where(getCondition(example, params))
+                .where(getConditions(example, params))
                 .toStrWithLog(context, params);
     }
 
-    private static String getCondition(BaseExample example, Map<String,Object> params){
+    private static String getConditions(BaseExample example, Map<String,Object> params){
         StringBuilder condition = new StringBuilder();
         example.getCriteriaList().forEach(criteria -> {
             for (Criterion cri : criteria.getAllCriteria()) {
@@ -329,8 +329,8 @@ public class BaseSqlProvider {
                     condition.append(cri.getCondition()).append("#{").append(property).append("}");
                 }else if(cri.isListValue()){
                     params.put(property, value);
-                    String inWhere = getInWhere(property, value);
-                    condition.append(cri.getCondition()).append("(").append(inWhere).append(")");
+                    String inSequence = getInSequence(property, value);
+                    condition.append(cri.getCondition()).append("(").append(inSequence).append(")");
                 }else if(cri.isBetweenValue()){
                     String property1 = property+"1", property2 = property+"2";
                     Object secondValue = cri.getSecondValue();
@@ -348,18 +348,21 @@ public class BaseSqlProvider {
         return condition.toString();
     }
 
-    private static String getInWhere(String property, Object value){
-        String inWhere = "";
-        if(value instanceof Collection){
-            Collection<?> collection = (Collection<?>) value;
+    private static String getInCondition(String column, String property, Object coll){
+        return column + " IN (" + getInSequence(property, coll) + ")";
+    }
+
+    private static String getInSequence(String property, Object coll){
+        if(coll instanceof Collection){
+            Collection<?> collection = (Collection<?>) coll;
             if(!CollectionUtils.isEmpty(collection)){
-                StringBuilder inList = new StringBuilder();
+                StringBuilder inSequence = new StringBuilder();
                 for (int i=0; i<collection.size(); i++) {
-                    inList.append("#{").append(property).append("[").append(i).append("]},");
+                    inSequence.append("#{").append(property).append("[").append(i).append("]},");
                 }
-                inWhere = inList.deleteCharAt(inList.length()-1).toString();
+                return inSequence.deleteCharAt(inSequence.length()-1).toString();
             }
         }
-        return inWhere;
+        return "";
     }
 }

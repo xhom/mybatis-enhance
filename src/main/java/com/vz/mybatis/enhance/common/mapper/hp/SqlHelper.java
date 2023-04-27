@@ -1,8 +1,5 @@
 package com.vz.mybatis.enhance.common.mapper.hp;
 
-import org.apache.ibatis.builder.annotation.ProviderContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -14,8 +11,6 @@ import java.util.Map;
  * @date 2023/4/24 17:39
  */
 public class SqlHelper {
-    private static final Logger logger = LoggerFactory.getLogger(SqlHelper.class);
-
     private final StringBuilder sb = new StringBuilder();
 
     public static SqlHelper sql(){
@@ -120,14 +115,5 @@ public class SqlHelper {
 
     public String toStr(){
         return sb.toString();
-    }
-
-    public String toStrWithLog(ProviderContext context, Object params){
-        String sql = toStr();
-        String mapperMethodName = context.getMapperType().getName()+"."+context.getMapperMethod().getName();
-        String separator = "------------------------------------------------------------------------------";
-        logger.info("\n{}\nMethod: {}\nSql: {} \nParams: {}\n{}",
-                separator, mapperMethodName, sql, (params==null?"{ }":params), separator);
-        return sql;
     }
 }

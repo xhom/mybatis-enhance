@@ -13,7 +13,7 @@ spring:
     username: wahaha
     password: 9cf502ed7d655f36
 
-  mybatis:
-    config-location: classpath:mybatis/mybatis-config.xml
-    mapper-locations: classpath:mybatis/mapper/*.xml
-    type-aliases-package: com.vz.mybatis.enhance.entity
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.vz.mybatis.enhance.entity

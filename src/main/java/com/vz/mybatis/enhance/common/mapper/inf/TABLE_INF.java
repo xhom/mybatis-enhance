@@ -34,7 +34,7 @@ public class TABLE_INF {
     }
 
     public String allColumns(){
-        return allColumns(true);
+        return allColumns(false);
     }
 
     public String allColumns(boolean isAlias){

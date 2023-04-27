@@ -355,8 +355,6 @@ public class BaseSqlProvider {
     }
 
     private static void washing(Map<String,Object> params){
-        params.remove("param1");
-        params.remove("querier");
-        params.remove("record");
+        Arrays.asList("param1", "querier", "record").forEach(params::remove);
     }
 }

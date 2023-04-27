@@ -3,9 +3,6 @@ package com.vz.mybatis.enhance.common.mapper.qr;
 import com.vz.mybatis.enhance.common.func.FFunction;
 import com.vz.mybatis.enhance.common.mapper.hp.MethodRefHelper;
 import com.vz.mybatis.enhance.common.mapper.hp.NameHelper;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 
@@ -27,8 +24,7 @@ public class Querier<T> {
     }
 
     public Querier<T> isNull(String property) {
-        Column column = getColumn(property);
-        criteria.isNull(column.getColumn());
+        criteria.isNull(toColumn(property));
         return this;
     }
 
@@ -37,8 +33,7 @@ public class Querier<T> {
     }
 
     public Querier<T> isNotNull(String property) {
-        Column column = getColumn(property);
-        criteria.isNotNull(column.getColumn());
+        criteria.isNotNull(toColumn(property));
         return this;
     }
 
@@ -47,8 +42,7 @@ public class Querier<T> {
     }
 
     public Querier<T> eq(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.eq(column.getColumn(), value, column.getProperty());
+        criteria.eq(toColumn(property), value, property);
         return this;
     }
 
@@ -57,8 +51,7 @@ public class Querier<T> {
     }
 
     public Querier<T> neq(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.neq(column.getColumn(), value, column.getProperty());
+        criteria.neq(toColumn(property), value, property);
         return this;
     }
 
@@ -67,8 +60,7 @@ public class Querier<T> {
     }
 
     public Querier<T> gt(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.gt(column.getColumn(), value, column.getProperty());
+        criteria.gt(toColumn(property), value, property);
         return this;
     }
 
@@ -77,8 +69,7 @@ public class Querier<T> {
     }
 
     public Querier<T> gte(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.gte(column.getColumn(), value, column.getProperty());
+        criteria.gte(toColumn(property), value, property);
         return this;
     }
 
@@ -87,8 +78,7 @@ public class Querier<T> {
     }
 
     public Querier<T> lt(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.lt(column.getColumn(), value, column.getProperty());
+        criteria.lt(toColumn(property), value, property);
         return this;
     }
 
@@ -97,8 +87,7 @@ public class Querier<T> {
     }
 
     public Querier<T> lte(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.lte(column.getColumn(), value, column.getProperty());
+        criteria.lte(toColumn(property), value, property);
         return this;
     }
 
@@ -107,8 +96,7 @@ public class Querier<T> {
     }
 
     public Querier<T> like(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.like(column.getColumn(), value, column.getProperty());
+        criteria.like(toColumn(property), value, property);
         return this;
     }
 
@@ -117,8 +105,7 @@ public class Querier<T> {
     }
 
     public Querier<T> likeLeft(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.likeLeft(column.getColumn(), value, column.getProperty());
+        criteria.likeLeft(toColumn(property), value, property);
         return this;
     }
 
@@ -127,8 +114,7 @@ public class Querier<T> {
     }
 
     public Querier<T> likeRight(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.likeRight(column.getColumn(), value, column.getProperty());
+        criteria.likeRight(toColumn(property), value, property);
         return this;
     }
 
@@ -137,8 +123,7 @@ public class Querier<T> {
     }
 
     public Querier<T> notLike(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.notLike(column.getColumn(), value, column.getProperty());
+        criteria.notLike(toColumn(property), value, property);
         return this;
     }
 
@@ -147,8 +132,7 @@ public class Querier<T> {
     }
 
     public Querier<T> notLikeLeft(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.notLikeLeft(column.getColumn(), value, column.getProperty());
+        criteria.notLikeLeft(toColumn(property), value, property);
         return this;
     }
 
@@ -157,8 +141,7 @@ public class Querier<T> {
     }
 
     public Querier<T> notLikeRight(String property, Object value) {
-        Column column = getColumn(property);
-        criteria.notLikeRight(column.getColumn(), value, column.getProperty());
+        criteria.notLikeRight(toColumn(property), value, property);
         return this;
     }
 
@@ -167,8 +150,7 @@ public class Querier<T> {
     }
 
     public Querier<T> in(String property, Collection<?> values) {
-        Column column = getColumn(property);
-        criteria.in(column.getColumn(), values, column.getProperty());
+        criteria.in(toColumn(property), values, property);
         return this;
     }
 
@@ -177,8 +159,7 @@ public class Querier<T> {
     }
 
     public Querier<T> notIn(String property, Collection<?> values) {
-        Column column = getColumn(property);
-        criteria.notIn(column.getColumn(), values, column.getProperty());
+        criteria.notIn(toColumn(property), values, property);
         return this;
     }
 
@@ -187,8 +168,7 @@ public class Querier<T> {
     }
 
     public Querier<T> between(String property, Object value1, Object value2) {
-        Column column = getColumn(property);
-        criteria.between(column.getColumn(), value1, value2, column.getProperty());
+        criteria.between(toColumn(property), value1, value2, property);
         return this;
     }
 
@@ -197,8 +177,7 @@ public class Querier<T> {
     }
 
     public Querier<T> notBetween(String property, Object value1, Object value2) {
-        Column column = getColumn(property);
-        criteria.notBetween(column.getColumn(), value1, value2, column.getProperty());
+        criteria.notBetween(toColumn(property), value1, value2, property);
         return this;
     }
 
@@ -207,8 +186,7 @@ public class Querier<T> {
     }
 
     public Querier<T> asc(String property){
-        Column column = getColumn(property);
-        example.addOrderBy(column.getColumn(), true);
+        example.addOrderBy(toColumn(property), true);
         return this;
     }
 
@@ -217,8 +195,7 @@ public class Querier<T> {
     }
 
     public Querier<T> desc(String property){
-        Column column = getColumn(property);
-        example.addOrderBy(column.getColumn(), false);
+        example.addOrderBy(toColumn(property), false);
         return this;
     }
 
@@ -253,18 +230,7 @@ public class Querier<T> {
         return MethodRefHelper.getFieldName(function);
     }
 
-    private Column getColumn(String property){
-        return Column.me(NameHelper.camel2underline(property), property);
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    static class Column {
-        private String column;
-        private String property;
-        public static Column me(String column, String property){
-            return new Column(column, property);
-        }
+    private String toColumn(String property){
+        return NameHelper.camel2underline(property);
     }
 }

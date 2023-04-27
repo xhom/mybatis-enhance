@@ -3,9 +3,9 @@ package com.vz.mybatis.enhance.common.mapper.qr;
 import com.vz.mybatis.enhance.common.func.FFunction;
 import com.vz.mybatis.enhance.common.mapper.hp.MethodRefHelper;
 import com.vz.mybatis.enhance.common.mapper.hp.NameHelper;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 
 import java.util.Collection;
 
@@ -23,127 +23,207 @@ public class Querier<T> {
     }
 
     public Querier<T> isNull(FFunction<T,?> function) {
-        Column column = getColumn(function);
+        return isNull(getProperty(function));
+    }
+
+    public Querier<T> isNull(String property) {
+        Column column = getColumn(property);
         criteria.isNull(column.getColumn());
         return this;
     }
 
     public Querier<T> isNotNull(FFunction<T,?> function) {
-        Column column = getColumn(function);
+        return isNotNull(getProperty(function));
+    }
+
+    public Querier<T> isNotNull(String property) {
+        Column column = getColumn(property);
         criteria.isNotNull(column.getColumn());
         return this;
     }
 
     public Querier<T> eq(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return eq(getProperty(function), value);
+    }
+
+    public Querier<T> eq(String property, Object value) {
+        Column column = getColumn(property);
         criteria.eq(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> neq(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return neq(getProperty(function), value);
+    }
+
+    public Querier<T> neq(String property, Object value) {
+        Column column = getColumn(property);
         criteria.neq(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> gt(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return gt(getProperty(function), value);
+    }
+
+    public Querier<T> gt(String property, Object value) {
+        Column column = getColumn(property);
         criteria.gt(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> gte(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return gte(getProperty(function), value);
+    }
+
+    public Querier<T> gte(String property, Object value) {
+        Column column = getColumn(property);
         criteria.gte(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> lt(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return lt(getProperty(function), value);
+    }
+
+    public Querier<T> lt(String property, Object value) {
+        Column column = getColumn(property);
         criteria.lt(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> lte(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return lte(getProperty(function), value);
+    }
+
+    public Querier<T> lte(String property, Object value) {
+        Column column = getColumn(property);
         criteria.lte(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> like(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return like(getProperty(function), value);
+    }
+
+    public Querier<T> like(String property, Object value) {
+        Column column = getColumn(property);
         criteria.like(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> likeLeft(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return likeLeft(getProperty(function), value);
+    }
+
+    public Querier<T> likeLeft(String property, Object value) {
+        Column column = getColumn(property);
         criteria.likeLeft(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> likeRight(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return likeRight(getProperty(function), value);
+    }
+
+    public Querier<T> likeRight(String property, Object value) {
+        Column column = getColumn(property);
         criteria.likeRight(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> notLike(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return notLike(getProperty(function), value);
+    }
+
+    public Querier<T> notLike(String property, Object value) {
+        Column column = getColumn(property);
         criteria.notLike(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> notLikeLeft(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return notLikeLeft(getProperty(function), value);
+    }
+
+    public Querier<T> notLikeLeft(String property, Object value) {
+        Column column = getColumn(property);
         criteria.notLikeLeft(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> notLikeRight(FFunction<T,?> function, Object value) {
-        Column column = getColumn(function);
+        return notLikeRight(getProperty(function), value);
+    }
+
+    public Querier<T> notLikeRight(String property, Object value) {
+        Column column = getColumn(property);
         criteria.notLikeRight(column.getColumn(), value, column.getProperty());
         return this;
     }
 
     public Querier<T> in(FFunction<T,?> function, Collection<?> values) {
-        Column column = getColumn(function);
+        return in(getProperty(function), values);
+    }
+
+    public Querier<T> in(String property, Collection<?> values) {
+        Column column = getColumn(property);
         criteria.in(column.getColumn(), values, column.getProperty());
         return this;
     }
 
     public Querier<T> notIn(FFunction<T,?> function, Collection<?> values) {
-        Column column = getColumn(function);
+        return notIn(getProperty(function), values);
+    }
+
+    public Querier<T> notIn(String property, Collection<?> values) {
+        Column column = getColumn(property);
         criteria.notIn(column.getColumn(), values, column.getProperty());
         return this;
     }
 
     public Querier<T> between(FFunction<T,?> function, Object value1, Object value2) {
-        Column column = getColumn(function);
+        return between(getProperty(function), value1, value2);
+    }
+
+    public Querier<T> between(String property, Object value1, Object value2) {
+        Column column = getColumn(property);
         criteria.between(column.getColumn(), value1, value2, column.getProperty());
         return this;
     }
 
     public Querier<T> notBetween(FFunction<T,?> function, Object value1, Object value2) {
-        Column column = getColumn(function);
+        return notBetween(getProperty(function), value1, value2);
+    }
+
+    public Querier<T> notBetween(String property, Object value1, Object value2) {
+        Column column = getColumn(property);
         criteria.notBetween(column.getColumn(), value1, value2, column.getProperty());
         return this;
     }
 
-    public Querier<T> distinct(){
-        example.setDistinct(true);
-        return this;
+    public Querier<T> asc(FFunction<T,?> function){
+        return asc(getProperty(function));
     }
 
-    public Querier<T> asc(FFunction<T,?> function){
-        Column column = getColumn(function);
+    public Querier<T> asc(String property){
+        Column column = getColumn(property);
         example.addOrderBy(column.getColumn(), true);
         return this;
     }
 
     public Querier<T> desc(FFunction<T,?> function){
-        Column column = getColumn(function);
+        return desc(getProperty(function));
+    }
+
+    public Querier<T> desc(String property){
+        Column column = getColumn(property);
         example.addOrderBy(column.getColumn(), false);
+        return this;
+    }
+
+    public Querier<T> distinct(){
+        example.setDistinct(true);
         return this;
     }
 
@@ -169,8 +249,11 @@ public class Querier<T> {
         return example;
     }
 
-    private Column getColumn(FFunction<T,?> function){
-        String property = MethodRefHelper.getFieldName(function);
+    private String getProperty(FFunction<T,?> function){
+        return MethodRefHelper.getFieldName(function);
+    }
+
+    private Column getColumn(String property){
         return Column.me(NameHelper.camel2underline(property), property);
     }
 
@@ -180,8 +263,8 @@ public class Querier<T> {
     static class Column {
         private String column;
         private String property;
-        public static Column me(String c, String p){
-            return new Column(c, p);
+        public static Column me(String column, String property){
+            return new Column(column, property);
         }
     }
 }

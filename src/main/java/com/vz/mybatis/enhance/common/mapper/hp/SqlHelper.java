@@ -22,6 +22,10 @@ public class SqlHelper {
         return new SqlHelper();
     }
 
+    public SqlHelper select(){
+        return select("*");
+    }
+
     public SqlHelper select(String columns){
         return select(columns, false);
     }
@@ -47,7 +51,7 @@ public class SqlHelper {
     public SqlHelper count(String column, boolean isDistinct){
         sb.append("SELECT COUNT(");
         if(isDistinct){
-            sb.append("DISTINCT ");
+            sb.append(" DISTINCT ");
         }
         sb.append(column).append(")");
         return this;

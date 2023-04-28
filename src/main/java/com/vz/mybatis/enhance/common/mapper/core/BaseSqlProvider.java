@@ -8,6 +8,9 @@ import com.vz.mybatis.enhance.common.mapper.qr.BaseExample;
 import com.vz.mybatis.enhance.common.mapper.qr.Criterion;
 import com.vz.mybatis.enhance.common.mapper.qr.Querier;
 import org.apache.ibatis.builder.annotation.ProviderContext;
+import org.apache.ibatis.logging.stdout.StdOutImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
@@ -18,6 +21,7 @@ import java.util.*;
  * @date 2023/4/24 13:18
  */
 public class BaseSqlProvider {
+    private static final Logger logger = LoggerFactory.getLogger(BaseSqlProvider.class);
 
     public String selectById(Map<String,Object> params, ProviderContext context){
         TABLE_INF table = MapperHelper.getTable(context);
@@ -26,7 +30,7 @@ public class BaseSqlProvider {
                 .select(table.allColumns())
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " = #{id}")
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String selectByIds(Map<String,Object> params, ProviderContext context){
@@ -37,7 +41,7 @@ public class BaseSqlProvider {
                 .select(table.allColumns())
                 .from(table.getTableName())
                 .where(getInCondition(pkColumn.getColumn(), "idList", idList))
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String selectOne(Map<String,Object> params, ProviderContext context){
@@ -50,7 +54,7 @@ public class BaseSqlProvider {
                 .where(getConditions(example, params))
                 .orderBy(example.getOrderByClause())
                 .limit("1") //只取查询结果中第一条记录
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String selectList(Map<String,Object> params, ProviderContext context){
@@ -63,7 +67,7 @@ public class BaseSqlProvider {
                 .where(getConditions(example, params))
                 .orderBy(example.getOrderByClause())
                 .limit(example.getLimitClause())
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String selectAll(ProviderContext context){
@@ -71,7 +75,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .select(table.allColumns())
                 .from(table.getTableName())
-                .toStr();
+                .toStr(sql -> log(context, sql, null));
     }
 
     public String count(Map<String,Object> params, ProviderContext context){
@@ -82,7 +86,7 @@ public class BaseSqlProvider {
                 .count(table.getPkColumn().getColumn(), example.getDistinct())
                 .from(table.getTableName())
                 .where(getConditions(example, params))
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String countAll(ProviderContext context){
@@ -90,7 +94,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .count(table.getPkColumn().getColumn())
                 .from(table.getTableName())
-                .toStr();
+                .toStr(sql -> log(context, sql, null));
     }
 
     public String deleteById(Map<String,Object> params, ProviderContext context){
@@ -100,7 +104,7 @@ public class BaseSqlProvider {
                 .delete()
                 .from(table.getTableName())
                 .where(pkColumn.getColumn() + " = #{id}")
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String deleteByIds(Map<String,Object> params, ProviderContext context){
@@ -111,7 +115,7 @@ public class BaseSqlProvider {
                 .delete()
                 .from(table.getTableName())
                 .where(getInCondition(pkColumn.getColumn(), "idList", idList))
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String delete(Map<String,Object> params, ProviderContext context){
@@ -122,7 +126,7 @@ public class BaseSqlProvider {
                 .delete()
                 .from(table.getTableName())
                 .where(getConditions(example, params))
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String insert(Map<String,Object> params, ProviderContext context){
@@ -148,7 +152,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .insert(table.getTableName())
                 .values(columns, values)
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String insertSelective(Map<String,Object> params, ProviderContext context){
@@ -176,7 +180,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .insert(table.getTableName())
                 .values(columns, values)
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String updateById(Map<String,Object> params, ProviderContext context){
@@ -207,7 +211,7 @@ public class BaseSqlProvider {
                 .update(table.getTableName())
                 .set(setValues)
                 .where(condition.toString())
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String updateByIdSelective(Map<String,Object> params, ProviderContext context){
@@ -239,7 +243,7 @@ public class BaseSqlProvider {
                 .update(table.getTableName())
                 .set(setValues)
                 .where(condition.toString())
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String update(Map<String,Object> params, ProviderContext context){
@@ -266,7 +270,7 @@ public class BaseSqlProvider {
                 .update(table.getTableName())
                 .set(setValues)
                 .where(getConditions(example, params))
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String updateSelective(Map<String,Object> params, ProviderContext context){
@@ -296,7 +300,7 @@ public class BaseSqlProvider {
                 .update(table.getTableName())
                 .set(setValues)
                 .where(getConditions(example, params))
-                .toStr();
+                .toStr(sql -> log(context, sql, washing(params)));
     }
 
     private static String getConditions(BaseExample example, Map<String,Object> params){
@@ -354,7 +358,13 @@ public class BaseSqlProvider {
         return "";
     }
 
-    private static void washing(Map<String,Object> params){
+    private static Map<String,Object> washing(Map<String,Object> params){
         Arrays.asList("param1", "querier", "record").forEach(params::remove);
+        return params;
+    }
+
+    private static void log(ProviderContext context, String sql, Object params){
+        String mapperMethodName = context.getMapperType().getName()+"."+context.getMapperMethod().getName();
+        logger.info("\nMethod: {}\nSql: {}\nParams: {}", mapperMethodName, sql, params==null?"{ }":params);
     }
 }

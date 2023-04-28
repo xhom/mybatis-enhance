@@ -4,6 +4,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author visy.wang
@@ -115,5 +116,11 @@ public class SqlHelper {
 
     public String toStr(){
         return sb.toString();
+    }
+
+    public String toStr(Consumer<String> consumer){
+        String sql = toStr();
+        consumer.accept(sql);
+        return sql;
     }
 }

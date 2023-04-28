@@ -130,8 +130,8 @@ public class MapperHelper {
         List<String> columnList = new ArrayList<>();
         String sql = "SELECT COLUMN_NAME FROM information_schema.`COLUMNS` WHERE TABLE_NAME = '"+tableName+"' AND COLUMN_KEY = 'PRI'";
         SqlSession sqlSession = SqlSessionHelper.getSqlSession();
-        Connection connection = sqlSession.getConnection();
-        try(Statement statement = connection.createStatement()){
+        try(Connection connection = sqlSession.getConnection();
+            Statement statement = connection.createStatement()){
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
                 columnList.add(resultSet.getString("COLUMN_NAME"));

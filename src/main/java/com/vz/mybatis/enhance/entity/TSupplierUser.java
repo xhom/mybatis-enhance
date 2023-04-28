@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 public class TSupplierUser {
-    private Long id;
+    private Long userId;
 
     private String userName;
 

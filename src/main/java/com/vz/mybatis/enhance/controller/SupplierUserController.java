@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 @RequestMapping("/user")
 @RestController
-public class UserController {
+public class SupplierUserController {
     @Resource
     private UserMapper userMapper;
 
@@ -47,7 +47,7 @@ public class UserController {
     @RequestMapping("/getOne")
     public Map<String,Object> getOne(@RequestParam Long entId){
         Querier<TSupplierUser> querier = Querier.<TSupplierUser>query()
-                .gt(TSupplierUser::getEnterpriseId, entId).asc(TSupplierUser::getId);
+                .gt(TSupplierUser::getEnterpriseId, entId).asc(TSupplierUser::getUserId);
         return resp(0, userMapper.selectOne(querier));
     }
 
@@ -73,11 +73,11 @@ public class UserController {
     @RequestMapping("/add")
     public Map<String,Object> add(@RequestParam(required = false, defaultValue = "1") Integer type){
         Querier<TSupplierUser> querier = Querier.<TSupplierUser>query()
-                .desc(TSupplierUser::getId)
+                .desc(TSupplierUser::getUserId)
                 .limit(1);
 
         List<TSupplierUser> supplierUserList = userMapper.selectList(querier);
-        Long newId = supplierUserList.get(0).getId()+1;
+        Long newId = supplierUserList.get(0).getUserId()+1;
 
         TSupplierUser user = new TSupplierUser();
         user.setUserName("张三"+newId);
@@ -109,7 +109,7 @@ public class UserController {
     public Map<String,Object> updateById(@PathVariable("id") Long id,
                                          @RequestParam(required = false, defaultValue = "1") Integer type){
         TSupplierUser user = new TSupplierUser();
-        user.setId(id);
+        user.setUserId(id);
         user.setPassword(UUID.randomUUID().toString().replace("-", ""));
         user.setCreateDt(new Date());
 

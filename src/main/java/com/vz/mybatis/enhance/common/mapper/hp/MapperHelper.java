@@ -4,11 +4,18 @@ import com.vz.mybatis.enhance.common.mapper.core.BaseMapper;
 import com.vz.mybatis.enhance.common.mapper.inf.COLUMN_INF;
 import com.vz.mybatis.enhance.common.mapper.inf.TABLE_INF;
 import org.apache.ibatis.builder.annotation.ProviderContext;
+import org.apache.ibatis.session.SqlSession;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,13 +61,15 @@ public class MapperHelper {
      * @return 表信息
      */
     private static TABLE_INF createTable(Class<?> entityClass){
-        //获取表名，此处直接将类名转换为下划线形式
-        //TODO 实际情况下可优先从注解获取
+        //获取表名，此处直接将类名转换为下划线形式，也可定义注解，然后从注解中获取
         String tableName = NameHelper.camel2underline(entityClass.getSimpleName());
 
         TABLE_INF table = new TABLE_INF();
         table.setTableName(tableName);
         table.setEntityClass(entityClass);
+
+        //获取主键字段名列表
+        List<String> pkColumns = getPkColumns(tableName);
 
         Field[] fields = entityClass.getDeclaredFields();
         for (Field field : fields) {
@@ -76,9 +85,7 @@ public class MapperHelper {
             column.setProperty(property);
             column.setFieldClass(field.getType());
             column.setColumn(NameHelper.camel2underline(property));
-            if("id".equals(property)){
-                //获取主键，此处直接看名称是否叫“id”
-                //TODO 实际情况下可根据注解判断，并看是否需要考虑联合主键
+            if(pkColumns.contains(column.getColumn())){
                 column.setIsPK(true);
                 table.setPkColumn(column);
             }
@@ -109,5 +116,29 @@ public class MapperHelper {
                     //抛出异常
                     return new IllegalArgumentException("未找到BaseMapper的泛型类："+mapperType.getName());
                 });
+    }
+
+    /**
+     * 获取主键列字段名（仅适用于MySQL）
+     * @param tableName 表名
+     * @return 主键字段名列表（联合主键才会有多个）
+     */
+    private static List<String> getPkColumns(String tableName){
+        List<String> columnList = new ArrayList<>();
+        String sql = "SELECT COLUMN_NAME FROM information_schema.`COLUMNS` WHERE TABLE_NAME = '"+tableName+"' AND COLUMN_KEY = 'PRI'";
+        SqlSession sqlSession = SqlSessionHelper.getSqlSession();
+        Connection connection = sqlSession.getConnection();
+        try(Statement statement = connection.createStatement()){
+            ResultSet resultSet = statement.executeQuery(sql);
+            while (resultSet.next()) {
+                columnList.add(resultSet.getString("COLUMN_NAME"));
+            }
+            return columnList;
+        }catch (SQLException e){
+            e.printStackTrace();
+            return columnList;
+        }finally {
+            SqlSessionHelper.closeSqlSession();
+        }
     }
 }

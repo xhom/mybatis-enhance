@@ -8,7 +8,6 @@ import com.vz.mybatis.enhance.common.mapper.qr.BaseExample;
 import com.vz.mybatis.enhance.common.mapper.qr.Criterion;
 import com.vz.mybatis.enhance.common.mapper.qr.Querier;
 import org.apache.ibatis.builder.annotation.ProviderContext;
-import org.apache.ibatis.logging.stdout.StdOutImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;

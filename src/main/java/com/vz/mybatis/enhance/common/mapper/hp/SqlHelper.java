@@ -22,6 +22,10 @@ public class SqlHelper {
         return select("*");
     }
 
+    public SqlHelper select(boolean isDistinct){
+        return select("*", isDistinct);
+    }
+
     public SqlHelper select(String columns){
         return select(columns, false);
     }

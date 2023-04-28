@@ -86,8 +86,11 @@ public class MapperHelper {
             column.setFieldClass(field.getType());
             column.setColumn(NameHelper.camel2underline(property));
             if(pkColumns.contains(column.getColumn())){
-                column.setIsPK(true);
-                table.setPkColumn(column);
+                column.setIsPK(true);//标记为主键字段
+                if(Objects.isNull(table.getPkColumn())){
+                    //只记录第一个主键字段
+                    table.setPkColumn(column);
+                }
             }
 
             table.addColumn(column);

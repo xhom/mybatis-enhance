@@ -137,7 +137,7 @@ public class MapperHelper {
                     .where(String.format("TABLE_NAME = '%s' AND COLUMN_KEY = 'PRI'", tableName))
                     .toStr());
             while (resultSet.next()) {
-                columnList.add(resultSet.getString("COLUMN_NAME"));
+                columnList.add(resultSet.getString(1));
             }
             return columnList;
         }catch (SQLException e){

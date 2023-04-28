@@ -139,6 +139,7 @@ public class MapperHelper {
             return columnList;
         }catch (SQLException e){
             e.printStackTrace();
+            columnList.add("id"); //默认"id"为主键
             return columnList;
         }finally {
             SqlSessionHelper.closeSqlSession();

@@ -39,18 +39,22 @@ public class MapperHelper {
      * @return 表信息
      */
     public static TABLE_INF getTable(ProviderContext context){
-        String mapperClassName = context.getMapperType().getName();
+        return getTable(context.getMapperType());
+    }
+
+    public static TABLE_INF getTable(Class<?> mapperType){
+        String mapperTypeName = mapperType.getName();
 
         //优先从缓存获取表信息
-        TABLE_INF table = tablesCache.get(mapperClassName);
+        TABLE_INF table = tablesCache.get(mapperTypeName);
         if(Objects.nonNull(table)){
             return table;
         }
 
         //创建表信息并放入缓存
-        Class<?> entityClass = getEntityType(context);
+        Class<?> entityClass = getEntityType(mapperType);
         table = createTable(entityClass);
-        tablesCache.put(mapperClassName, table);
+        tablesCache.put(mapperTypeName, table);
 
         return table;
     }
@@ -105,7 +109,10 @@ public class MapperHelper {
      * @return 表对应的实体类信息
      */
     private static Class<?> getEntityType(ProviderContext context) {
-        Class<?> mapperType = context.getMapperType();
+        return getEntityType(context.getMapperType());
+    }
+
+    private static Class<?> getEntityType(Class<?> mapperType) {
         Type[] genericInterfaces = mapperType.getGenericInterfaces();//实现的获取接口列表
         return Stream.of(genericInterfaces)
                 .filter(ParameterizedType.class::isInstance) //过滤出带有泛型参数的接口

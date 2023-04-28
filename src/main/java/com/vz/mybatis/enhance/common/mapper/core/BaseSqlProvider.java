@@ -151,7 +151,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .insert(table.getTableName())
                 .values(columns, values)
-                .toStr(sql -> log(context, sql, washing(params)));
+                .toStr(sql -> log(context, sql, entity));
     }
 
     public String insertSelective(Map<String,Object> params, ProviderContext context){
@@ -179,7 +179,7 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .insert(table.getTableName())
                 .values(columns, values)
-                .toStr(sql -> log(context, sql, washing(params)));
+                .toStr(sql -> log(context, sql, entity));
     }
 
     public String updateById(Map<String,Object> params, ProviderContext context){

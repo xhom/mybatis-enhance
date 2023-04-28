@@ -98,8 +98,6 @@ public interface BaseMapper<T,K>{
      * @return 新增成功数量
      */
     @InsertProvider(type = BaseSqlProvider.class, method = "insert")
-    //@SelectKey(statement = "SELECT LAST_INSERT_ID()", keyProperty = "id", before = false, resultType = Long.class)
-    //@Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "record.id")
     int insert(@Param("record") T record);
 
     /**
@@ -108,7 +106,6 @@ public interface BaseMapper<T,K>{
      * @return 新增成功数量
      */
     @InsertProvider(type = BaseSqlProvider.class, method = "insertSelective")
-    //@Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "record.id")
     int insertSelective(@Param("record") T record);
 
     /**

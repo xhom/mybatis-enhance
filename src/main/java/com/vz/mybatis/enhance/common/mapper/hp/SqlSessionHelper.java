@@ -26,7 +26,9 @@ public class SqlSessionHelper implements ApplicationContextAware {
 
     public static SqlSession getSqlSession(){
         if(sqlSession == null){
-            template = context.getBean(SqlSessionTemplate.class);
+            if(template == null){
+                template = context.getBean(SqlSessionTemplate.class);
+            }
             sqlSession = SqlSessionUtils.getSqlSession(template.getSqlSessionFactory(),
                     template.getExecutorType(), template.getPersistenceExceptionTranslator());
         }
@@ -35,5 +37,6 @@ public class SqlSessionHelper implements ApplicationContextAware {
 
     public static void closeSqlSession(){
         SqlSessionUtils.closeSqlSession(sqlSession, template.getSqlSessionFactory());
+        sqlSession = null;
     }
 }

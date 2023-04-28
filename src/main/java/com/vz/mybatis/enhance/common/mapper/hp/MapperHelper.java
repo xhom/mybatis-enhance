@@ -128,11 +128,14 @@ public class MapperHelper {
      */
     private static List<String> getPkColumns(String tableName){
         List<String> columnList = new ArrayList<>();
-        String sql = "SELECT COLUMN_NAME FROM information_schema.`COLUMNS` WHERE TABLE_NAME = '"+tableName+"' AND COLUMN_KEY = 'PRI'";
         SqlSession sqlSession = SqlSessionHelper.getSqlSession();
         try(Connection connection = sqlSession.getConnection();
             Statement statement = connection.createStatement()){
-            ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery(SqlHelper.sql()
+                    .select("COLUMN_NAME")
+                    .from("information_schema.`COLUMNS`")
+                    .where(String.format("TABLE_NAME = '%s' AND COLUMN_KEY = 'PRI'", tableName))
+                    .toStr());
             while (resultSet.next()) {
                 columnList.add(resultSet.getString("COLUMN_NAME"));
             }

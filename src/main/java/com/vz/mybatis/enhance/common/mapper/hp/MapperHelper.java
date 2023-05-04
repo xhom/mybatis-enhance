@@ -1,10 +1,13 @@
 package com.vz.mybatis.enhance.common.mapper.hp;
 
 import com.vz.mybatis.enhance.common.mapper.core.BaseMapper;
+import com.vz.mybatis.enhance.common.mapper.core.BaseSqlProvider;
 import com.vz.mybatis.enhance.common.mapper.inf.COLUMN_INF;
 import com.vz.mybatis.enhance.common.mapper.inf.TABLE_INF;
 import org.apache.ibatis.builder.annotation.ProviderContext;
 import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -27,6 +30,7 @@ import java.util.stream.Stream;
  * @date 2023/4/24 16:17
  */
 public class MapperHelper {
+    private static final Logger logger = LoggerFactory.getLogger(MapperHelper.class);
     /**
      * 表信息缓存
      * Map<Mapper类全名, 对应的表信息>
@@ -55,6 +59,7 @@ public class MapperHelper {
         Class<?> entityClass = getEntityType(mapperType);
         table = createTable(entityClass);
         tablesCache.put(mapperTypeName, table);
+        logger.info("create table information and put to cache: {}", table.getTableName());
 
         return table;
     }

@@ -58,7 +58,7 @@ public class MapperHelper {
         Class<?> entityClass = getEntityType(mapperType);
         table = createTable(entityClass);
         tablesCache.put(mapperTypeName, table);
-        logger.info("create table information and put to cache: {}", table.getTableName());
+        logger.info("Created table information and put to cache: {}", table.getTableName());
 
         return table;
     }
@@ -128,7 +128,7 @@ public class MapperHelper {
                 .map(Class.class::cast)//将Type转为Class
                 .orElseThrow(() -> {
                     //抛出异常
-                    return new IllegalArgumentException("未找到BaseMapper的泛型类："+mapperType.getName());
+                    return new IllegalArgumentException("Can't find the generic class of BaseMapper: "+mapperType.getName());
                 });
     }
 
@@ -150,9 +150,10 @@ public class MapperHelper {
             while (resultSet.next()) {
                 columnList.add(resultSet.getString(1));
             }
+            logger.info("Find the primary key columns of {}: {}", tableName, columnList);
             return columnList;
         }catch (SQLException e){
-            e.printStackTrace();
+            logger.info("Query primary key columns of {} error: {}", tableName, e.getMessage());
             columnList.add("id"); //默认"id"为主键
             return columnList;
         }finally {

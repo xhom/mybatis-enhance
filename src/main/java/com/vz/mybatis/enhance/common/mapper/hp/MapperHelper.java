@@ -150,7 +150,7 @@ public class MapperHelper {
             while (resultSet.next()) {
                 columnList.add(resultSet.getString(1));
             }
-            logger.info("Find the primary key columns of {}: {}", tableName, columnList);
+            logger.info("Find the primary key columns of {}: {}", tableName, String.join(",", columnList));
             return columnList;
         }catch (SQLException e){
             logger.info("Query primary key columns of {} error: {}", tableName, e.getMessage());

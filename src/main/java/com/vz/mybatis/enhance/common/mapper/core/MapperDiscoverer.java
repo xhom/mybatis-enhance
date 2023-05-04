@@ -87,6 +87,7 @@ public class MapperDiscoverer implements ApplicationListener<ContextRefreshedEve
             //已经设置过则忽略
             return;
         }
+        String statementId = statement.getId();
         try{
             if(Objects.isNull(keyColumnsField)){
                 Class<?> statementClass = statement.getClass();
@@ -99,9 +100,9 @@ public class MapperDiscoverer implements ApplicationListener<ContextRefreshedEve
             keyColumnsField.set(statement, new String[]{keyColumn});
             keyPropertiesField.set(statement, new String[]{keyProperty});
             keyGeneratorField.set(statement, Jdbc3KeyGenerator.INSTANCE);
-            logger.info("{} mapped statement modify success, keyColumn={}, keyProperty={}", statement.getId(), keyColumn, keyProperty);
+            logger.info("Mapped statement modify success, keyColumn: {}, keyProperty: {}, path: {}", keyColumn, keyProperty, statementId);
         }catch (Exception e){
-            logger.info("{} mapped statement modify failure: {}", statement.getId(), e.getMessage());
+            logger.info("Mapped statement modify failure, error: {}, path: {}", e.getMessage(), statementId);
         }
     }
 }

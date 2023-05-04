@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 @Component
 public class MapperDiscoverer implements ApplicationListener<ContextRefreshedEvent> {
     private static final Logger logger = LoggerFactory.getLogger(MapperDiscoverer.class);
+    private static Field keyColumnsField, keyPropertiesField, keyGeneratorField;
 
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
@@ -39,25 +40,25 @@ public class MapperDiscoverer implements ApplicationListener<ContextRefreshedEve
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         ApplicationContext applicationContext = event.getApplicationContext();
-        if(Objects.isNull(applicationContext.getParent())){
-            @SuppressWarnings("rawtypes")
-            Map<String, BaseMapper> mappers = applicationContext.getBeansOfType(BaseMapper.class);
-            Map<String, List<MappedStatement>> insertMappedStatements = getInsertMappedStatements();
-            mappers.forEach((name, proxyMapper) -> {
-                Class<?> mapperType = (Class<?>) proxyMapper.getClass().getGenericInterfaces()[0];
-                COLUMN_INF column = MapperHelper.getTable(mapperType).getPkColumn();
-                //获取对应Mapper的Insert语句列表
-                List<MappedStatement> mappedStatements = insertMappedStatements.get(mapperType.getName());
-                if(CollectionUtils.isEmpty(mappedStatements)){
-                    return;
-                }
-                mappedStatements.forEach(mappedStatement -> {
-                    //修改Insert语句的配置，实现主键的回写
-                    modifyMappedStatement(mappedStatement, column.getColumn(), "record."+column.getProperty());
-                });
-            });
-
+        if(Objects.nonNull(applicationContext.getParent())){
+            return;
         }
+        @SuppressWarnings("rawtypes")
+        Map<String, BaseMapper> mappers = applicationContext.getBeansOfType(BaseMapper.class);
+        Map<String, List<MappedStatement>> insertMappedStatements = getInsertMappedStatements();
+        mappers.forEach((name, proxyMapper) -> {
+            Class<?> mapperType = (Class<?>) proxyMapper.getClass().getGenericInterfaces()[0];
+            //获取对应Mapper的Insert语句列表
+            List<MappedStatement> mappedStatements = insertMappedStatements.get(mapperType.getName());
+            if(CollectionUtils.isEmpty(mappedStatements)){
+                return;
+            }
+            COLUMN_INF pkColumn = MapperHelper.getTable(mapperType).getPkColumn();
+            mappedStatements.forEach(statement -> {
+                //修改Insert语句的配置，实现主键的回写
+                modifyMappedStatement(statement, pkColumn.getColumn(), "record."+pkColumn.getProperty());
+            });
+        });
     }
 
     /**
@@ -84,18 +85,20 @@ public class MapperDiscoverer implements ApplicationListener<ContextRefreshedEve
      */
     private static void modifyMappedStatement(MappedStatement statement, String keyColumn, String keyProperty){
         try{
-            Class<?> clazz = statement.getClass();
-            Field keyColumnsField = clazz.getDeclaredField("keyColumns");
-            Field keyPropertiesField = clazz.getDeclaredField("keyProperties");
-            Field keyGeneratorField = clazz.getDeclaredField("keyGenerator");
-            Field.setAccessible(new AccessibleObject[]{keyColumnsField, keyPropertiesField, keyGeneratorField}, true);
-
+            if(Objects.isNull(keyColumnsField)){
+                Class<?> statementClass = statement.getClass();
+                keyColumnsField = statementClass.getDeclaredField("keyColumns");
+                keyPropertiesField = statementClass.getDeclaredField("keyProperties");
+                keyGeneratorField = statementClass.getDeclaredField("keyGenerator");
+                AccessibleObject[] accessibleObjects = {keyColumnsField, keyPropertiesField, keyGeneratorField};
+                Field.setAccessible(accessibleObjects, true);
+            }
             keyColumnsField.set(statement, new String[]{keyColumn});
             keyPropertiesField.set(statement, new String[]{keyProperty});
             keyGeneratorField.set(statement, Jdbc3KeyGenerator.INSTANCE);
-            logger.info("{} mapped statement modify success!", statement.getId());
+            logger.info("{} mapped statement modify success, keyColumn={}, keyProperty={}", statement.getId(), keyColumn, keyProperty);
         }catch (Exception e){
-            e.printStackTrace();
+            logger.info("{} mapped statement modify failure: {}", statement.getId(), e.getMessage());
         }
     }
 }

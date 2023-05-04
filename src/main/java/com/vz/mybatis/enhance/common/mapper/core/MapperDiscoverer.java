@@ -51,9 +51,9 @@ public class MapperDiscoverer implements ApplicationListener<ContextRefreshedEve
                 return;
             }
             COLUMN_INF pkColumn = MapperHelper.getTable(mapperType).getPkColumn();
+            String keyProperty = BaseSqlProvider.ENTITY_NAME+"."+pkColumn.getProperty();
             mappedStatements.forEach(statement -> {
                 //修改Insert语句的配置，实现主键的回写
-                String keyProperty = BaseSqlProvider.ENTITY_NAME+"."+pkColumn.getProperty();
                 modifyMappedStatement(statement, pkColumn.getColumn(), keyProperty);
             });
         });

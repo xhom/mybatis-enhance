@@ -1,7 +1,6 @@
 package com.vz.mybatis.enhance.common.mapper.hp;
 
 import com.vz.mybatis.enhance.common.mapper.core.BaseMapper;
-import com.vz.mybatis.enhance.common.mapper.core.BaseSqlProvider;
 import com.vz.mybatis.enhance.common.mapper.inf.COLUMN_INF;
 import com.vz.mybatis.enhance.common.mapper.inf.TABLE_INF;
 import org.apache.ibatis.builder.annotation.ProviderContext;

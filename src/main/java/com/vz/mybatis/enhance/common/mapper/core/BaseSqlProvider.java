@@ -368,6 +368,6 @@ public class BaseSqlProvider {
 
     private static void log(ProviderContext context, String sql, Object params){
         String mapperMethodName = context.getMapperType().getName()+"."+context.getMapperMethod().getName();
-        logger.info("\nMethod: {}\nSql: {}\nParams: {}", mapperMethodName, sql, params==null?"{ }":params);
+        logger.info("\nMethod: {}\nSql: {}\nParams: {}", mapperMethodName, sql, params==null?"{}":params);
     }
 }

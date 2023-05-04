@@ -18,10 +18,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -85,6 +82,11 @@ public class MapperDiscoverer implements ApplicationListener<ContextRefreshedEve
      * @param keyProperty 主键在实体对象的名称
      */
     private static void modifyMappedStatement(MappedStatement statement, String keyColumn, String keyProperty){
+        String[] keyColumns = statement.getKeyColumns();
+        if(Objects.nonNull(keyColumns) && keyColumns.length>0){
+            //已经设置过则忽略
+            return;
+        }
         try{
             if(Objects.isNull(keyColumnsField)){
                 Class<?> statementClass = statement.getClass();

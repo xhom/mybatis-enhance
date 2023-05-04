@@ -69,11 +69,11 @@ public class MapperDiscoverer implements ApplicationListener<ContextRefreshedEve
     private Map<String,List<MappedStatement>> getInsertMappedStatements(){
         Configuration configuration = sqlSessionTemplate.getConfiguration();
         Collection<MappedStatement> mappedStatements = configuration.getMappedStatements();
-        return mappedStatements.stream().filter(mappedStatement -> {
-            return SqlCommandType.INSERT.equals(mappedStatement.getSqlCommandType());
-        }).collect(Collectors.groupingBy(mappedStatement -> {
-            String mappedStatementId = mappedStatement.getId();
-            return mappedStatementId.substring(0, mappedStatementId.lastIndexOf("."));
+        return mappedStatements.stream().filter(statement -> {
+            return SqlCommandType.INSERT.equals(statement.getSqlCommandType());
+        }).collect(Collectors.groupingBy(statement -> {
+            String statementId = statement.getId();
+            return statementId.substring(0, statementId.lastIndexOf("."));
         }));
     }
 

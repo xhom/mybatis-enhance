@@ -56,7 +56,8 @@ public class MapperDiscoverer implements ApplicationListener<ContextRefreshedEve
             COLUMN_INF pkColumn = MapperHelper.getTable(mapperType).getPkColumn();
             mappedStatements.forEach(statement -> {
                 //修改Insert语句的配置，实现主键的回写
-                modifyMappedStatement(statement, pkColumn.getColumn(), "record."+pkColumn.getProperty());
+                String keyProperty = BaseSqlProvider.ENTITY_NAME+"."+pkColumn.getProperty();
+                modifyMappedStatement(statement, pkColumn.getColumn(), keyProperty);
             });
         });
     }

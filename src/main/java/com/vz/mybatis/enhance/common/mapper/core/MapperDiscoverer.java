@@ -47,7 +47,7 @@ public class MapperDiscoverer implements ApplicationListener<ContextRefreshedEve
         Map<String, BaseMapper> mappers = applicationContext.getBeansOfType(BaseMapper.class);
         Map<String, List<MappedStatement>> insertMappedStatements = getInsertMappedStatements();
         mappers.forEach((name, proxyMapper) -> {
-            Class<?> mapperType = (Class<?>) proxyMapper.getClass().getGenericInterfaces()[0];
+            Class<?> mapperType = proxyMapper.getClass().getInterfaces()[0];
             //获取对应Mapper的Insert语句列表
             List<MappedStatement> mappedStatements = insertMappedStatements.get(mapperType.getName());
             if(CollectionUtils.isEmpty(mappedStatements)){

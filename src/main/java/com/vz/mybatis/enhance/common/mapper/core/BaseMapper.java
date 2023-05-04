@@ -20,7 +20,7 @@ public interface BaseMapper<T,K>{
      * @return 记录
      */
     @SelectProvider(type = BaseSqlProvider.class, method = "selectById")
-    T selectById(@Param("id") K id);
+    T selectById(@Param(BaseSqlProvider.ID_NAME) K id);
 
     /**
      * 按主键列表批量查询记录
@@ -28,7 +28,7 @@ public interface BaseMapper<T,K>{
      * @return 记录列表
      */
     @SelectProvider(type = BaseSqlProvider.class, method = "selectByIds")
-    List<T> selectByIds(@Param("idList") Collection<K> idList);
+    List<T> selectByIds(@Param(BaseSqlProvider.IDS_NAME) Collection<K> idList);
 
     /**
      * 按条件查询一条记录（多条记录时，自动取第一条）
@@ -36,7 +36,7 @@ public interface BaseMapper<T,K>{
      * @return 记录
      */
     @SelectProvider(type = BaseSqlProvider.class, method = "selectOne")
-    T selectOne(@Param("querier") Querier<T> querier);
+    T selectOne(@Param(BaseSqlProvider.QUERIER_NAME) Querier<T> querier);
 
     /**
      * 按条件查询记录列表
@@ -44,7 +44,7 @@ public interface BaseMapper<T,K>{
      * @return 记录列表
      */
     @SelectProvider(type = BaseSqlProvider.class, method = "selectList")
-    List<T> selectList(@Param("querier") Querier<T> querier);
+    List<T> selectList(@Param(BaseSqlProvider.QUERIER_NAME) Querier<T> querier);
 
     /**
      * 查询所有记录列表
@@ -59,7 +59,7 @@ public interface BaseMapper<T,K>{
      * @return 记录数
      */
     @SelectProvider(type = BaseSqlProvider.class, method = "count")
-    long count(@Param("querier") Querier<T> querier);
+    long count(@Param(BaseSqlProvider.QUERIER_NAME) Querier<T> querier);
 
     /**
      * 查询所有记录总数
@@ -74,7 +74,7 @@ public interface BaseMapper<T,K>{
      * @return 删除成功数量
      */
     @DeleteProvider(type = BaseSqlProvider.class, method = "deleteById")
-    int deleteById(@Param("id") K id);
+    int deleteById(@Param(BaseSqlProvider.ID_NAME) K id);
 
     /**
      * 按主键列表批量删除记录
@@ -82,7 +82,7 @@ public interface BaseMapper<T,K>{
      * @return 删除成功数量
      */
     @DeleteProvider(type = BaseSqlProvider.class, method = "deleteByIds")
-    int deleteByIds(@Param("idList") Collection<K> idList);
+    int deleteByIds(@Param(BaseSqlProvider.IDS_NAME) Collection<K> idList);
 
     /**
      * 按条件删除记录
@@ -90,7 +90,7 @@ public interface BaseMapper<T,K>{
      * @return 删除成功数量
      */
     @DeleteProvider(type = BaseSqlProvider.class, method = "delete")
-    int delete(@Param("querier") Querier<T> querier);
+    int delete(@Param(BaseSqlProvider.QUERIER_NAME) Querier<T> querier);
 
     /**
      * 新增一条记录（包含为null的字段）
@@ -98,7 +98,7 @@ public interface BaseMapper<T,K>{
      * @return 新增成功数量
      */
     @InsertProvider(type = BaseSqlProvider.class, method = "insert")
-    int insert(@Param("record") T record);
+    int insert(@Param(BaseSqlProvider.ENTITY_NAME) T record);
 
     /**
      * 新增一条记录（不包含为null的字段）
@@ -106,7 +106,7 @@ public interface BaseMapper<T,K>{
      * @return 新增成功数量
      */
     @InsertProvider(type = BaseSqlProvider.class, method = "insertSelective")
-    int insertSelective(@Param("record") T record);
+    int insertSelective(@Param(BaseSqlProvider.ENTITY_NAME) T record);
 
     /**
      * 按主键更新记录（包含为null的字段）
@@ -114,7 +114,7 @@ public interface BaseMapper<T,K>{
      * @return 更新成功数量
      */
     @UpdateProvider(type = BaseSqlProvider.class, method = "updateById")
-    int updateById(@Param("record") T record);
+    int updateById(@Param(BaseSqlProvider.ENTITY_NAME) T record);
 
     /**
      * 按主键更新记录（不包含为null的字段）
@@ -122,7 +122,7 @@ public interface BaseMapper<T,K>{
      * @return 更新成功数量
      */
     @UpdateProvider(type = BaseSqlProvider.class, method = "updateByIdSelective")
-    int updateByIdSelective(@Param("record") T record);
+    int updateByIdSelective(@Param(BaseSqlProvider.ENTITY_NAME) T record);
 
     /**
      * 按条件更新记录（包含record中为null的字段）
@@ -131,7 +131,7 @@ public interface BaseMapper<T,K>{
      * @return 更新成功数量
      */
     @UpdateProvider(type = BaseSqlProvider.class, method = "update")
-    int update(@Param("record") T record, @Param("querier") Querier<T> querier);
+    int update(@Param(BaseSqlProvider.ENTITY_NAME) T record, @Param(BaseSqlProvider.QUERIER_NAME) Querier<T> querier);
 
     /**
      * 按条件更新记录（不包含record中为null的字段）
@@ -140,5 +140,5 @@ public interface BaseMapper<T,K>{
      * @return 更新成功数量
      */
     @UpdateProvider(type = BaseSqlProvider.class, method = "updateSelective")
-    int updateSelective(@Param("record") T record, @Param("querier") Querier<T> querier);
+    int updateSelective(@Param(BaseSqlProvider.ENTITY_NAME) T record, @Param(BaseSqlProvider.QUERIER_NAME) Querier<T> querier);
 }

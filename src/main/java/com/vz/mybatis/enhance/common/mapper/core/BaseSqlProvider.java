@@ -21,6 +21,10 @@ import java.util.*;
  */
 public class BaseSqlProvider {
     private static final Logger logger = LoggerFactory.getLogger(BaseSqlProvider.class);
+    public static final String ID_NAME = "id";
+    public static final String IDS_NAME = "idList";
+    public static final String ENTITY_NAME = "record";
+    public static final String QUERIER_NAME = "querier";
 
     public String selectById(Map<String,Object> params, ProviderContext context){
         TABLE_INF table = MapperHelper.getTable(context);
@@ -28,23 +32,23 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .select(table.allColumns())
                 .from(table.getTableName())
-                .where(pkColumn.getColumn() + " = #{id}")
+                .where(pkColumn.getColumn() + " = #{"+ID_NAME+"}")
                 .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String selectByIds(Map<String,Object> params, ProviderContext context){
-        Object idList = params.get("idList");
+        Object idList = params.get(IDS_NAME);
         TABLE_INF table = MapperHelper.getTable(context);
         COLUMN_INF pkColumn = table.getPkColumn();
         return SqlHelper.sql()
                 .select(table.allColumns())
                 .from(table.getTableName())
-                .where(getInCondition(pkColumn.getColumn(), "idList", idList))
+                .where(getInCondition(pkColumn.getColumn(), IDS_NAME, idList))
                 .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String selectOne(Map<String,Object> params, ProviderContext context){
-        Querier<?> querier = (Querier<?>)params.get("querier");
+        Querier<?> querier = (Querier<?>)params.get(QUERIER_NAME);
         TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         return SqlHelper.sql()
@@ -57,7 +61,7 @@ public class BaseSqlProvider {
     }
 
     public String selectList(Map<String,Object> params, ProviderContext context){
-        Querier<?> querier = (Querier<?>)params.get("querier");
+        Querier<?> querier = (Querier<?>)params.get(QUERIER_NAME);
         TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         return SqlHelper.sql()
@@ -78,7 +82,7 @@ public class BaseSqlProvider {
     }
 
     public String count(Map<String,Object> params, ProviderContext context){
-        Querier<?> querier = (Querier<?>)params.get("querier");
+        Querier<?> querier = (Querier<?>)params.get(QUERIER_NAME);
         TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         return SqlHelper.sql()
@@ -102,23 +106,23 @@ public class BaseSqlProvider {
         return SqlHelper.sql()
                 .delete()
                 .from(table.getTableName())
-                .where(pkColumn.getColumn() + " = #{id}")
+                .where(pkColumn.getColumn() + " = #{"+ID_NAME+"}")
                 .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String deleteByIds(Map<String,Object> params, ProviderContext context){
-        Object idList = params.get("idList");
+        Object idList = params.get(IDS_NAME);
         TABLE_INF table = MapperHelper.getTable(context);
         COLUMN_INF pkColumn = table.getPkColumn();
         return SqlHelper.sql()
                 .delete()
                 .from(table.getTableName())
-                .where(getInCondition(pkColumn.getColumn(), "idList", idList))
+                .where(getInCondition(pkColumn.getColumn(), IDS_NAME, idList))
                 .toStr(sql -> log(context, sql, washing(params)));
     }
 
     public String delete(Map<String,Object> params, ProviderContext context){
-        Querier<?> querier = (Querier<?>)params.get("querier");
+        Querier<?> querier = (Querier<?>)params.get(QUERIER_NAME);
         TABLE_INF table = MapperHelper.getTable(context);
         BaseExample example = querier.getExample();
         return SqlHelper.sql()
@@ -129,7 +133,7 @@ public class BaseSqlProvider {
     }
 
     public String insert(Map<String,Object> params, ProviderContext context){
-        Object entity = params.get("record");
+        Object entity = params.get(ENTITY_NAME);
         TABLE_INF table = MapperHelper.getTable(context);
         List<String> columns = new ArrayList<>(), values = new ArrayList<>();
         table.getColumns().forEach(item -> {
@@ -155,7 +159,7 @@ public class BaseSqlProvider {
     }
 
     public String insertSelective(Map<String,Object> params, ProviderContext context){
-        Object entity = params.get("record");
+        Object entity = params.get(ENTITY_NAME);
         TABLE_INF table = MapperHelper.getTable(context);
         List<String> columns = new ArrayList<>(), values = new ArrayList<>();
         table.getColumns().forEach(item -> {
@@ -183,7 +187,7 @@ public class BaseSqlProvider {
     }
 
     public String updateById(Map<String,Object> params, ProviderContext context){
-        Object entity = params.get("record");
+        Object entity = params.get(ENTITY_NAME);
         TABLE_INF table = MapperHelper.getTable(context);
         Map<String,String> setValues = new HashMap<>();
         StringBuilder condition = new StringBuilder();
@@ -214,7 +218,7 @@ public class BaseSqlProvider {
     }
 
     public String updateByIdSelective(Map<String,Object> params, ProviderContext context){
-        Object entity = params.get("record");
+        Object entity = params.get(ENTITY_NAME);
         TABLE_INF table = MapperHelper.getTable(context);
         Map<String,String> setValues = new HashMap<>();
         StringBuilder condition = new StringBuilder();
@@ -246,8 +250,8 @@ public class BaseSqlProvider {
     }
 
     public String update(Map<String,Object> params, ProviderContext context){
-        Object entity = params.get("record");
-        Querier<?> querier = (Querier<?>)params.get("querier");
+        Object entity = params.get(ENTITY_NAME);
+        Querier<?> querier = (Querier<?>)params.get(QUERIER_NAME);
         BaseExample example = querier.getExample();
         TABLE_INF table = MapperHelper.getTable(context);
         Map<String,String> setValues = new HashMap<>();
@@ -273,8 +277,8 @@ public class BaseSqlProvider {
     }
 
     public String updateSelective(Map<String,Object> params, ProviderContext context){
-        Object entity = params.get("record");
-        Querier<?> querier = (Querier<?>)params.get("querier");
+        Object entity = params.get(ENTITY_NAME);
+        Querier<?> querier = (Querier<?>)params.get(QUERIER_NAME);
         BaseExample example = querier.getExample();
         TABLE_INF table = MapperHelper.getTable(context);
         Map<String,String> setValues = new HashMap<>();
@@ -358,7 +362,7 @@ public class BaseSqlProvider {
     }
 
     private static Map<String,Object> washing(Map<String,Object> params){
-        Arrays.asList("param1", "querier", "record").forEach(params::remove);
+        Arrays.asList("param1", QUERIER_NAME, ENTITY_NAME).forEach(params::remove);
         return params;
     }
 

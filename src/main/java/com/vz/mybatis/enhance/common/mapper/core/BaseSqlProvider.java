@@ -199,7 +199,7 @@ public class BaseSqlProvider {
                 if(item.getIsPK()){
                     if(Objects.isNull(value)){
                         //主键值不能为空
-                        throw new IllegalArgumentException("The property '"+property+"' can not be null !");
+                        throw new IllegalArgumentException("The primary key '"+property+"' can not be null !");
                     }
                     condition.append(column).append("=").append("#{").append(property).append("}");
                 }else{
@@ -229,7 +229,7 @@ public class BaseSqlProvider {
                 if(item.getIsPK()){
                     if(Objects.isNull(value)){
                         //主键值不能为空
-                        throw new IllegalArgumentException("The property '"+property+"' can not be null !");
+                        throw new IllegalArgumentException("The primary key '"+property+"' can not be null !");
                     }
                     params.put(property, value);
                     condition.append(column).append("=").append("#{").append(property).append("}");

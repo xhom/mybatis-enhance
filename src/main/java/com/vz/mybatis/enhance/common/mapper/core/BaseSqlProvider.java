@@ -22,7 +22,7 @@ import java.util.*;
 public class BaseSqlProvider {
     private static final Logger logger = LoggerFactory.getLogger(BaseSqlProvider.class);
     public static final String ID_NAME = "id";
-    public static final String IDS_NAME = "idList";
+    public static final String IDS_NAME = "ids";
     public static final String ENTITY_NAME = "record";
     public static final String QUERIER_NAME = "querier";
 
@@ -368,6 +368,6 @@ public class BaseSqlProvider {
 
     private static void log(ProviderContext context, String sql, Object params){
         String mapperMethodName = context.getMapperType().getName()+"."+context.getMapperMethod().getName();
-        logger.info("\nMethod: {}\nSql: {}\nParams: {}", mapperMethodName, sql, params==null?"{}":params);
+        logger.info("\nMethod: {}\nSQL: {}\nParams: {}", mapperMethodName, sql, params==null?"{}":params);
     }
 }
